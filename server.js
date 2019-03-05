@@ -40,6 +40,10 @@ config[1].entry = {
   demo5: [
     ...hotEntries,
     './demos/demo5/index.js'
+  ],
+  workflow_manager: [
+    ...hotEntries,
+    './demos/workflow_manager/index.js'
   ]
 };
 config[1].output.filename = '[name].js';
