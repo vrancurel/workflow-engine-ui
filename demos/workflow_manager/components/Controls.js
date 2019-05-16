@@ -74,9 +74,6 @@ export class Controls extends React.Component {
     } catch (err) {
       window.confirm(err.message);
     }
-    if (wed.isCyclic()) {
-      window.confirm('model is cyclic');
-    }
   }
 
   openModal() {
@@ -171,12 +168,12 @@ export class Controls extends React.Component {
       func = selectedNode.func;
       script = selectedNode.script;
       synchronous = selectedNode.synchronous;
-      if (type === 'source') {
-        subTypes = wed.getSourceTypes();
-      } else if (type === 'target') {
-        subTypes = wed.getTargetTypes();
-      } else if (type === 'filter') {
-        subTypes = wed.getFilterTypes();
+      if (type === wed.SOURCE) {
+        subTypes = wed.sourceTypes;
+      } else if (type === wed.TARGET) {
+        subTypes = wed.targetTypes;
+      } else if (type === wed.FILTER) {
+        subTypes = wed.filterTypes;
       }
     }
     if (this.state.synchronous !== undefined) {
