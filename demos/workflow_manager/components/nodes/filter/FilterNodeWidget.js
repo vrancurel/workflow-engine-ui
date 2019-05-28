@@ -39,7 +39,7 @@ export class FilterNodeWidget extends React.Component {
   render() {
     const { node, displayOnly, color: displayColor } = this.props;
     const { name, color } = node;
-    let { subType, synchronous } = node;
+    let { subType, asynchronous } = node;
     const style = {};
     if (color || displayColor) {
       style.background = color || displayColor;
@@ -47,10 +47,10 @@ export class FilterNodeWidget extends React.Component {
     if (subType === undefined) {
       subType = '<subType>';
     }
-    if (synchronous === undefined) {
-      synchronous = '';
+    if (asynchronous === undefined) {
+      asynchronous = '';
     } else {
-      synchronous = synchronous ? 'sync' : 'async';
+      asynchronous = asynchronous ? 'async' : 'sync';
     }
 
     return (
@@ -62,7 +62,7 @@ export class FilterNodeWidget extends React.Component {
           {!displayOnly ? <div className='fa fa-close' onClick={this.onRemove.bind(this)} /> : null}
         </div>
         <div className='sub-type'>
-          {subType} ({synchronous})
+          {subType} ({asynchronous})
         </div>
         <div className='ports'>
           <div className='in'>

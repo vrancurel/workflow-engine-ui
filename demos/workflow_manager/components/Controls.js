@@ -93,11 +93,11 @@ export class Controls extends React.Component {
     if (!selectedNode) {
       throw new Error('a node shall be selected');
     }
-    if (e.target.name === 'synchronous') {
-      if (this.state.synchronous === undefined) {
-        e.target.value = selectedNode.synchronous ? 'off' : 'on';
+    if (e.target.name === 'asynchronous') {
+      if (this.state.asynchronous === undefined) {
+        e.target.value = selectedNode.asynchronous ? 'off' : 'on';
       } else {
-        e.target.value = this.state.synchronous === 'on' ? 'off' : 'on';
+        e.target.value = this.state.asynchronous === 'on' ? 'off' : 'on';
       }
     } else {
       e.preventDefault();
@@ -110,7 +110,7 @@ export class Controls extends React.Component {
     this.state.subType = undefined;
     this.state.func = undefined;
     this.state.script = undefined;
-    this.state.synchronous = undefined;
+    this.state.asynchronous = undefined;
   }
   
   modifyNodeCb(node, arg) {
@@ -126,8 +126,8 @@ export class Controls extends React.Component {
     if (arg.script !== undefined) {
       node.script = arg.script;
     }
-    if (arg.synchronous !== undefined) {
-      node.synchronous = arg.synchronous === 'on' ? true : false;
+    if (arg.asynchronous !== undefined) {
+      node.asynchronous = arg.asynchronous === 'on' ? true : false;
     }
   }
 
@@ -142,7 +142,7 @@ export class Controls extends React.Component {
         arg.subType = this.state.subType;
         arg.func = this.state.func;
         arg.script = this.state.script;
-        arg.synchronous = this.state.synchronous;
+        arg.asynchronous = this.state.asynchronous;
         diagramModel.modifyNode(selectedNode.getID(), this.modifyNodeCb, arg);
         this.props.updateModel(diagramModel.serializeDiagram());
         this.resetState();
@@ -159,7 +159,7 @@ export class Controls extends React.Component {
     let subType = 'undefined';
     let subTypes = ['undefined'];
     let script = '';
-    let synchronous = true;
+    let asynchronous = true;
     let func = '';
     if (selectedNode) {
       type = selectedNode.nodeType;
@@ -167,7 +167,7 @@ export class Controls extends React.Component {
       subType = selectedNode.subType;
       func = selectedNode.func;
       script = selectedNode.script;
-      synchronous = selectedNode.synchronous;
+      asynchronous = selectedNode.asynchronous;
       if (type === wed.SOURCE) {
         subTypes = wed.sourceTypes;
       } else if (type === wed.TARGET) {
@@ -176,8 +176,8 @@ export class Controls extends React.Component {
         subTypes = wed.filterTypes;
       }
     }
-    if (this.state.synchronous !== undefined) {
-      synchronous = this.state.synchronous === 'on' ? true : false;
+    if (this.state.asynchronous !== undefined) {
+      asynchronous = this.state.asynchronous === 'on' ? true : false;
     }
     
     return <Modal
@@ -216,8 +216,8 @@ export class Controls extends React.Component {
           </pre>
         </div>
         <div>
-          <label className="modal-label">Synchronous: </label>
-          <input type="checkbox" name="synchronous" defaultChecked={synchronous} onChange={this.inputChanged}/>
+          <label className="modal-label">Asynchronous: </label>
+          <input type="checkbox" name="asynchronous" defaultChecked={asynchronous} onChange={this.inputChanged}/>
         </div>
         <button className="m-1 btn btn-primary" type="button" onClick={this.closeModal}>Cancel</button>
         <input className="m-1 btn btn-primary" type="submit" value="Submit" />

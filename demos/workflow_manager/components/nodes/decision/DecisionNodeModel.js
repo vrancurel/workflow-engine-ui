@@ -10,7 +10,7 @@ export class DecisionNodeModel extends RJD.NodeModel {
     this.name = name;
     this.color = color;
     this.script = undefined;
-    this.synchronous = undefined;
+    this.asynchronous = undefined;
   }
 
   deSerialize(object) {
@@ -18,7 +18,7 @@ export class DecisionNodeModel extends RJD.NodeModel {
     this.name = object.name;
     this.color = object.color;
     this.script = object.script;
-    this.synchronous = object.synchronous;
+    this.asynchronous = object.asynchronous;
   }
 
   serialize() {
@@ -26,7 +26,7 @@ export class DecisionNodeModel extends RJD.NodeModel {
       name: this.name,
       color: this.color,
       script: this.script,
-      synchronous: this.synchronous
+      asynchronous: this.asynchronous
     });
   }
 

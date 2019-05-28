@@ -13,7 +13,7 @@ export class FilterNodeModel extends RJD.NodeModel {
     this.subType = wed.getDefaultFilterType();
     this.func = undefined;
     this.script = undefined;
-    this.synchronous = undefined;
+    this.asynchronous = false;
   }
 
   deSerialize(object) {
@@ -23,7 +23,7 @@ export class FilterNodeModel extends RJD.NodeModel {
     this.subType = object.subType;
     this.func = object.func;
     this.script = object.script;
-    this.synchronous = object.synchronous;
+    this.asynchronous = object.asynchronous;
   }
 
   serialize() {
@@ -33,7 +33,7 @@ export class FilterNodeModel extends RJD.NodeModel {
       subType: this.subType,
       func: this.func,
       script: this.script,
-      synchronous: this.synchronous
+      asynchronous: this.asynchronous
     });
   }
 
