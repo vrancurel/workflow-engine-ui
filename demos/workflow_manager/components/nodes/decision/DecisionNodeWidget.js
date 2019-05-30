@@ -50,11 +50,14 @@ export class DecisionNodeWidget extends React.Component {
   render() {
     const { node, displayOnly, color: displayColor } = this.props;
     const { name, color } = node;
+    let { subType, asynchronous } = node;
     const style = {};
     if (color || displayColor) {
       style.background = color || displayColor;
     }
-    
+    if (subType === undefined) {
+      subType = '';
+    }    
     return (
       <div className='basic-node' style={style}>
         <div className='title'>
@@ -62,6 +65,9 @@ export class DecisionNodeWidget extends React.Component {
             {name}
           </div>
           {!displayOnly ? <div className='fa fa-close' onClick={this.onRemove.bind(this)} /> : null}
+        </div>
+        <div className='sub-type'>
+          {subType}
         </div>
         <div className='ports'>
           <div className='in'>

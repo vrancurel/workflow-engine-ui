@@ -1,11 +1,11 @@
 import React from 'react';
 import * as RJD from '../../../../../src/main';
-import { FilterNodeModel } from './FilterNodeModel';
+import { FunctionNodeModel } from './FunctionNodeModel';
 
-export class FilterNodeWidget extends React.Component {
+export class FunctionNodeWidget extends React.Component {
   static defaultProps = {
     node: null,
-    color: 'rgb(224, 98, 20)'
+    color: 'rgb(127, 255, 212)'
   };
 
   onRemove() {
@@ -16,24 +16,24 @@ export class FilterNodeWidget extends React.Component {
 
   getInPort() {
     const { node, color, displayOnly } = this.props;
-    let filterNode = node;
+    let functionNode = node;
 
     if (displayOnly) {
-      filterNode = new FilterNodeModel(node.name, color);
+      functionNode = new FunctionNodeModel(node.name, color);
     }
 
-    return filterNode.getInPort ? <RJD.DefaultPortLabel model={filterNode.getInPort()} key='in-port' /> : null;
+    return functionNode.getInPort ? <RJD.DefaultPortLabel model={functionNode.getInPort()} key='in-port' /> : null;
   }
 
   getOutPort() {
     const { node, color, displayOnly } = this.props;
-    let filterNode = node;
+    let functionNode = node;
 
     if (displayOnly) {
-      filterNode = new FilterNodeModel(node.name, color);
+      functionNode = new FunctionNodeModel(node.name, color);
     }
 
-    return filterNode.getOutPort ? <RJD.DefaultPortLabel model={filterNode.getOutPort()} key='out-port' /> : null;
+    return functionNode.getOutPort ? <RJD.DefaultPortLabel model={functionNode.getOutPort()} key='out-port' /> : null;
   }
 
   render() {
@@ -45,12 +45,7 @@ export class FilterNodeWidget extends React.Component {
       style.background = color || displayColor;
     }
     if (subType === undefined) {
-      subType = '<subType>';
-    }
-    if (asynchronous === undefined) {
-      asynchronous = '';
-    } else {
-      asynchronous = asynchronous ? 'async' : 'sync';
+      subType = '';
     }
 
     return (
@@ -62,7 +57,7 @@ export class FilterNodeWidget extends React.Component {
           {!displayOnly ? <div className='fa fa-close' onClick={this.onRemove.bind(this)} /> : null}
         </div>
         <div className='sub-type'>
-          {subType} ({asynchronous})
+          {subType}
         </div>
         <div className='ports'>
           <div className='in'>
@@ -77,4 +72,4 @@ export class FilterNodeWidget extends React.Component {
   }
 }
 
-export const FilterNodeWidgetFactory = React.createFactory(FilterNodeWidget);
+export const FunctionNodeWidgetFactory = React.createFactory(FunctionNodeWidget);

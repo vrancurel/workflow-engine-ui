@@ -36,7 +36,7 @@ export class SourceNodeWidget extends React.Component {
       style.background = color || displayColor;
     }
     if (subType === undefined) {
-      subType = '<subType>';
+      subType = '';
     }
 
     return (

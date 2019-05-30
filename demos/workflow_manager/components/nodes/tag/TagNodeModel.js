@@ -2,16 +2,15 @@ import _ from 'lodash';
 import WorkflowEngineDefs from 'workflow-engine-defs';
 import * as RJD from '../../../../../src/main';
 
-export class FilterNodeModel extends RJD.NodeModel {
+export class TagNodeModel extends RJD.NodeModel {
   constructor(name = 'Untitled', color = 'rgb(224, 98, 20)') {
-    super('filter');
+    super('tag');
     this.addPort(new RJD.DefaultPortModel(false, 'output', 'Out'));
     this.addPort(new RJD.DefaultPortModel(true, 'input', 'In'));
     this.name = name;
     this.color = color;
     let wed = new WorkflowEngineDefs();
-    this.subType = wed.getDefaultFilterType();
-    this.func = undefined;
+    this.subType = wed.getDefaultTagType();
     this.script = undefined;
     this.asynchronous = false;
   }

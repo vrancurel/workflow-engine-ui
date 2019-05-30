@@ -2,7 +2,8 @@ import React from 'react';
 import { DragWrapper } from './DragWrapper';
 import { SourceNodeWidget } from './nodes/source/SourceNodeWidget';
 import { TargetNodeWidget } from './nodes/target/TargetNodeWidget';
-import { FilterNodeWidget } from './nodes/filter/FilterNodeWidget';
+import { TagNodeWidget } from './nodes/tag/TagNodeWidget';
+import { FunctionNodeWidget } from './nodes/function/FunctionNodeWidget';
 import { DecisionNodeWidget } from './nodes/decision/DecisionNodeWidget';
 
 class Node extends React.Component {
@@ -10,16 +11,19 @@ class Node extends React.Component {
     const { type, color } = this.props;
 
     if (type === 'source') {
-      return <SourceNodeWidget node={{ name: 'Source Node' }} displayOnly />;
+      return <SourceNodeWidget node={{ name: 'Source' }} displayOnly />;
     }
     if (type === 'target') {
-      return <TargetNodeWidget node={{ name: 'Target Node' }} displayOnly />;
+      return <TargetNodeWidget node={{ name: 'Target' }} displayOnly />;
     }
-    if (type === 'filter') {
-      return <FilterNodeWidget node={{ name: 'Filter Node' }} color={color} displayOnly />;
+    if (type === 'tag') {
+      return <TagNodeWidget node={{ name: 'Tag' }} color={color} displayOnly />;
+    }
+    if (type === 'function') {
+      return <FunctionNodeWidget node={{ name: 'Function' }} color={color} displayOnly />;
     }
     if (type === 'decision') {
-      return <DecisionNodeWidget node={{ name: 'Decision Node' }} displayOnly />;
+      return <DecisionNodeWidget node={{ name: 'Decision' }} displayOnly />;
     }
     console.warn('Unknown node type');
     return null;
@@ -50,8 +54,11 @@ export class NodesPanel extends React.Component {
           <Node type={ 'source' } />
         </div>
         <div className='node-wrapper'>
-          <Node type={ 'filter' } />
+          <Node type={ 'tag' } />
         </div>
+        <div className='node-wrapper'>
+          <Node type={ 'function' } />
+        </div>            
         <div className='node-wrapper'>
           <Node type={ 'decision' } />
         </div>

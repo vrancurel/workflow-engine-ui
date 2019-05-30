@@ -1,11 +1,11 @@
 import React from 'react';
 import * as RJD from '../../../../../src/main';
-import { TargetNodeModel } from './TargetNodeModel';
+import { TagNodeModel } from './TagNodeModel';
 
-export class TargetNodeWidget extends React.Component {
+export class TagNodeWidget extends React.Component {
   static defaultProps = {
     node: null,
-    color: 'rgb(192, 255, 0)'
+    color: 'rgb(224, 98, 20)'
   };
 
   onRemove() {
@@ -14,23 +14,32 @@ export class TargetNodeWidget extends React.Component {
     diagramEngine.forceUpdate();
   }
 
-  getInPorts() {
+  getInPort() {
     const { node, color, displayOnly } = this.props;
-    let targetNode = node;
+    let tagNode = node;
 
     if (displayOnly) {
-      targetNode = new TargetNodeModel(node.name, color);
+      tagNode = new TagNodeModel(node.name, color);
     }
 
-    return targetNode.getInPorts ? targetNode.getInPorts().map((port, i) => (
-      <RJD.DefaultPortLabel model={port} key={`in-port-${i}`} />
-    )) : [];
+    return tagNode.getInPort ? <RJD.DefaultPortLabel model={tagNode.getInPort()} key='in-port' /> : null;
+  }
+
+  getOutPort() {
+    const { node, color, displayOnly } = this.props;
+    let tagNode = node;
+
+    if (displayOnly) {
+      tagNode = new TagNodeModel(node.name, color);
+    }
+
+    return tagNode.getOutPort ? <RJD.DefaultPortLabel model={tagNode.getOutPort()} key='out-port' /> : null;
   }
 
   render() {
     const { node, displayOnly, color: displayColor } = this.props;
     const { name, color } = node;
-    let { subType } = node;
+    let { subType, asynchronous } = node;
     const style = {};
     if (color || displayColor) {
       style.background = color || displayColor;
@@ -52,7 +61,10 @@ export class TargetNodeWidget extends React.Component {
         </div>
         <div className='ports'>
           <div className='in'>
-            {this.getInPorts()}
+            {this.getInPort()}
+          </div>
+          <div className='out'>
+            {this.getOutPort()}
           </div>
         </div>
       </div>
@@ -60,4 +72,4 @@ export class TargetNodeWidget extends React.Component {
   }
 }
 
-export const TargetNodeWidgetFactory = React.createFactory(TargetNodeWidget);
+export const TagNodeWidgetFactory = React.createFactory(TagNodeWidget);

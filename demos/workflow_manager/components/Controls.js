@@ -172,8 +172,12 @@ export class Controls extends React.Component {
         subTypes = wed.sourceTypes;
       } else if (type === wed.TARGET) {
         subTypes = wed.targetTypes;
-      } else if (type === wed.FILTER) {
-        subTypes = wed.filterTypes;
+      } else if (type === wed.DECISION) {
+        subTypes = wed.decisionTypes;
+      } else if (type === wed.TAG) {
+        subTypes = wed.tagTypes;
+      } else if (type === wed.FUNCTION) {
+        subTypes = wed.functionTypes;
       }
     }
     if (this.state.asynchronous !== undefined) {

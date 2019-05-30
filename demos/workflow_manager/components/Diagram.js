@@ -4,7 +4,8 @@ import { DropTarget } from 'react-dnd';
 import * as RJD from '../../../src/main';
 import { SourceNodeModel } from './nodes/source/SourceNodeModel';
 import { TargetNodeModel } from './nodes/target/TargetNodeModel';
-import { FilterNodeModel } from './nodes/filter/FilterNodeModel';
+import { TagNodeModel } from './nodes/tag/TagNodeModel';
+import { FunctionNodeModel } from './nodes/function/FunctionNodeModel';
 import { DecisionNodeModel } from './nodes/decision/DecisionNodeModel';
 import { diagramEngine } from './Engine';
 
@@ -27,8 +28,11 @@ const nodesTarget = {
     if (item.type === 'target') {
       node = new TargetNodeModel(undefined, undefined);
     }
-    if (item.type === 'filter') {
-      node = new FilterNodeModel(undefined, undefined);
+    if (item.type === 'tag') {
+        node = new TagNodeModel(undefined, undefined);
+    }
+    if (item.type === 'function') {
+        node = new FunctionNodeModel(undefined, undefined);
     }
     if (item.type === 'decision') {
       node = new DecisionNodeModel(undefined, undefined);
