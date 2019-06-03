@@ -1,11 +1,11 @@
 import React from 'react';
 import * as RJD from '../../../../../src/main';
-import { SourceNodeModel } from './SourceNodeModel';
+import { SearchNodeModel } from './SearchNodeModel';
 
-export class SourceNodeWidget extends React.Component {
+export class SearchNodeWidget extends React.Component {
   static defaultProps = {
     node: null,
-    color: 'rgb(157, 13, 193)'
+    color: 'rgb(157, 13, 123)'
   };
 
   onRemove() {
@@ -16,13 +16,13 @@ export class SourceNodeWidget extends React.Component {
 
   getOutPorts() {
     const { node, color, displayOnly } = this.props;
-    let sourceNode = node;
+    let searchNode = node;
 
     if (displayOnly) {
-      sourceNode = new SourceNodeModel(node.name, color);
+      searchNode = new SearchNodeModel(node.name, color);
     }
 
-    return sourceNode.getOutPorts ? sourceNode.getOutPorts().map((port, i) => (
+    return searchNode.getOutPorts ? searchNode.getOutPorts().map((port, i) => (
       <RJD.DefaultPortLabel model={port} key={`out-port-${i}`} />
     )) : [];
   }
@@ -60,4 +60,4 @@ export class SourceNodeWidget extends React.Component {
   }
 }
 
-export const SourceNodeWidgetFactory = React.createFactory(SourceNodeWidget);
+export const SearchNodeWidgetFactory = React.createFactory(SearchNodeWidget);

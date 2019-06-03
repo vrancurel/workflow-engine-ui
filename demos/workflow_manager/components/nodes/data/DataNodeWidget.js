@@ -1,12 +1,12 @@
 import React from 'react';
 import WorkflowEngineDefs from 'workflow-engine-defs';
 import * as RJD from '../../../../../src/main';
-import { TagNodeModel } from './TagNodeModel';
+import { DataNodeModel } from './DataNodeModel';
 
-export class TagNodeWidget extends React.Component {
+export class DataNodeWidget extends React.Component {
   static defaultProps = {
     node: null,
-    color: 'rgb(224, 98, 20)'
+    color: 'rgb(157, 13, 193)'
   };
 
   onRemove() {
@@ -15,32 +15,23 @@ export class TagNodeWidget extends React.Component {
     diagramEngine.forceUpdate();
   }
 
-  getInPort() {
+  getOutPorts() {
     const { node, color, displayOnly } = this.props;
-    let tagNode = node;
+    let dataNode = node;
 
     if (displayOnly) {
-      tagNode = new TagNodeModel(node.name, color);
+      dataNode = new DataNodeModel(node.name, color);
     }
 
-    return tagNode.getInPort ? <RJD.DefaultPortLabel model={tagNode.getInPort()} key='in-port' /> : null;
-  }
-
-  getOutPort() {
-    const { node, color, displayOnly } = this.props;
-    let tagNode = node;
-
-    if (displayOnly) {
-      tagNode = new TagNodeModel(node.name, color);
-    }
-
-    return tagNode.getOutPort ? <RJD.DefaultPortLabel model={tagNode.getOutPort()} key='out-port' /> : null;
+    return dataNode.getOutPorts ? dataNode.getOutPorts().map((port, i) => (
+      <RJD.DefaultPortLabel model={port} key={`out-port-${i}`} />
+    )) : [];
   }
 
   render() {
     const { node, displayOnly, color: displayColor } = this.props;
     const { name, color } = node;
-    let { subType, key, value } = node;
+    let { subType, value } = node;
     const style = {};
     if (color || displayColor) {
       style.background = color || displayColor;
@@ -50,8 +41,8 @@ export class TagNodeWidget extends React.Component {
     }
     let wed = new WorkflowEngineDefs();
     if (subType === wed.KEY_VALUE) {
-      if (key !== undefined) {
-        subType = key + ' = ' + (value ? value : '');
+      if (value !== undefined) {
+        subType = value;
       }
     }
 
@@ -67,11 +58,8 @@ export class TagNodeWidget extends React.Component {
           {subType}
         </div>
         <div className='ports'>
-          <div className='in'>
-            {this.getInPort()}
-          </div>
           <div className='out'>
-            {this.getOutPort()}
+            {this.getOutPorts()}
           </div>
         </div>
       </div>
@@ -79,4 +67,4 @@ export class TagNodeWidget extends React.Component {
   }
 }
 
-export const TagNodeWidgetFactory = React.createFactory(TagNodeWidget);
+export const DataNodeWidgetFactory = React.createFactory(DataNodeWidget);

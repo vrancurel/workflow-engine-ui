@@ -2,7 +2,8 @@ import React from 'react';
 import _ from 'lodash';
 import { DropTarget } from 'react-dnd';
 import * as RJD from '../../../src/main';
-import { SourceNodeModel } from './nodes/source/SourceNodeModel';
+import { DataNodeModel } from './nodes/data/DataNodeModel';
+import { SearchNodeModel } from './nodes/search/SearchNodeModel';
 import { TargetNodeModel } from './nodes/target/TargetNodeModel';
 import { TagNodeModel } from './nodes/tag/TagNodeModel';
 import { FunctionNodeModel } from './nodes/function/FunctionNodeModel';
@@ -21,26 +22,30 @@ const nodesTarget = {
     const y = pageY - top - offsetY;
     const item = monitor.getItem();
 
+    const name = 'Node' + diagramModel.getNameCounter();
     let node;
-    if (item.type === 'source') {
-      node = new SourceNodeModel(undefined, undefined);
+    if (item.type === 'data') {
+      node = new DataNodeModel(name, undefined);
+    }
+    if (item.type === 'search') {
+      node = new SearchNodeModel(name, undefined);
     }
     if (item.type === 'target') {
-      node = new TargetNodeModel(undefined, undefined);
+      node = new TargetNodeModel(name, undefined);
     }
     if (item.type === 'tag') {
-        node = new TagNodeModel(undefined, undefined);
+        node = new TagNodeModel(name, undefined);
     }
     if (item.type === 'function') {
-        node = new FunctionNodeModel(undefined, undefined);
+        node = new FunctionNodeModel(name, undefined);
     }
     if (item.type === 'decision') {
-      node = new DecisionNodeModel(undefined, undefined);
+      node = new DecisionNodeModel(name, undefined);
     }
 
     node.x = x;
     node.y = y;
-    diagramModel.addNode(node);
+    diagramModel.addNodeBumpNameCounter(node);
     props.updateModel(diagramModel.serializeDiagram());
   },
 };

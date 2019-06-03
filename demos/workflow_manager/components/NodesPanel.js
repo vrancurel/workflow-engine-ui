@@ -1,6 +1,7 @@
 import React from 'react';
 import { DragWrapper } from './DragWrapper';
-import { SourceNodeWidget } from './nodes/source/SourceNodeWidget';
+import { DataNodeWidget } from './nodes/data/DataNodeWidget';
+import { SearchNodeWidget } from './nodes/search/SearchNodeWidget';
 import { TargetNodeWidget } from './nodes/target/TargetNodeWidget';
 import { TagNodeWidget } from './nodes/tag/TagNodeWidget';
 import { FunctionNodeWidget } from './nodes/function/FunctionNodeWidget';
@@ -10,20 +11,23 @@ class Node extends React.Component {
   renderNode() {
     const { type, color } = this.props;
 
-    if (type === 'source') {
-      return <SourceNodeWidget node={{ name: 'Source' }} displayOnly />;
+    if (type === 'data') {
+      return <DataNodeWidget node={{ name: 'Data' }} displayOnly />;
     }
-    if (type === 'target') {
-      return <TargetNodeWidget node={{ name: 'Target' }} displayOnly />;
+    if (type === 'search') {
+      return <SearchNodeWidget node={{ name: 'Search' }} displayOnly />;
     }
     if (type === 'tag') {
       return <TagNodeWidget node={{ name: 'Tag' }} color={color} displayOnly />;
     }
+    if (type === 'decision') {
+      return <DecisionNodeWidget node={{ name: 'Decision' }} displayOnly />;
+    }
     if (type === 'function') {
       return <FunctionNodeWidget node={{ name: 'Function' }} color={color} displayOnly />;
     }
-    if (type === 'decision') {
-      return <DecisionNodeWidget node={{ name: 'Decision' }} displayOnly />;
+    if (type === 'target') {
+      return <TargetNodeWidget node={{ name: 'Target' }} displayOnly />;
     }
     console.warn('Unknown node type');
     return null;
@@ -51,7 +55,10 @@ export class NodesPanel extends React.Component {
           WORKFLOW MANAGER
         </div>
         <div className='node-wrapper'>
-          <Node type={ 'source' } />
+          <Node type={ 'data' } />
+        </div>
+        <div className='node-wrapper'>
+          <Node type={ 'search' } />
         </div>
         <div className='node-wrapper'>
           <Node type={ 'tag' } />

@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import WorkflowEngineDefs from 'workflow-engine-defs';
 import { diagramModel } from './Diagram';
 import { diagramEngine } from './Engine';
@@ -29,6 +30,7 @@ export class Controls extends React.Component {
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.tabChanged = this.tabChanged.bind(this);
     this.inputChanged = this.inputChanged.bind(this);
     this.loadWorkflow = this.loadWorkflow.bind(this);
     this.saveWorkflow = this.saveWorkflow.bind(this);
@@ -88,6 +90,11 @@ export class Controls extends React.Component {
     this.setState({modalIsOpen: false});
   }
 
+  tabChanged(index, lastIndex, e) {
+    console.log('tabChanged', index, lastIndex);
+    this.state.tab = index;
+  }
+  
   inputChanged(e) {
     const { selectedNode } = this.props;
     if (!selectedNode) {
@@ -106,29 +113,56 @@ export class Controls extends React.Component {
   }
 
   resetState() {
+    // common to all nodes
     this.state.name = undefined;
     this.state.subType = undefined;
-    this.state.func = undefined;
+    this.state.tab = undefined;
+    // data and search
+    // tag and decision
+    this.state.key = undefined;
+    this.state.value = undefined;
     this.state.script = undefined;
+    // functions
+    this.state.func = undefined;
+    this.state.param = undefined;
     this.state.asynchronous = undefined;
+    // targets
   }
   
   modifyNodeCb(node, arg) {
+    let wed = new WorkflowEngineDefs();
+    // common
     if (arg.name !== undefined) {
       node.name = arg.name;
     }
     if (arg.subType !== undefined) {
       node.subType = arg.subType;
     }
-    if (arg.func !== undefined) {
-      node.func = arg.func;
+    // data and search
+    // tag and decision
+    if (arg.key !== undefined) {
+      node.key = arg.key;
+      node.subType = wed.KEY_VALUE;
+    }
+    if (arg.value !== undefined) {
+      node.value = arg.value;
+      node.subType = wed.KEY_VALUE;
     }
     if (arg.script !== undefined) {
       node.script = arg.script;
+      node.subType = wed.SCRIPT;
+    }
+    // functions
+    if (arg.func !== undefined) {
+      node.func = arg.func;
+    }
+    if (arg.param !== undefined) {
+      node.param = arg.param;
     }
     if (arg.asynchronous !== undefined) {
       node.asynchronous = arg.asynchronous === 'on' ? true : false;
     }
+    // targets
   }
 
   handleSubmit(type) {
@@ -137,12 +171,21 @@ export class Controls extends React.Component {
       const { selectedNode } = this.props;
       if (selectedNode) {
         let arg = {};
+        // common
         arg.type = type;
         arg.name = this.state.name;
         arg.subType = this.state.subType;
-        arg.func = this.state.func;
+        arg.tab = this.state.tab;
+        // data and search
+        // tags and decisions
+        arg.key = this.state.key;
+        arg.value = this.state.value;
         arg.script = this.state.script;
+        // functions
+        arg.func = this.state.func;
+        arg.param = this.state.param;
         arg.asynchronous = this.state.asynchronous;
+        // targets
         diagramModel.modifyNode(selectedNode.getID(), this.modifyNodeCb, arg);
         this.props.updateModel(diagramModel.serializeDiagram());
         this.resetState();
@@ -154,22 +197,31 @@ export class Controls extends React.Component {
   getModal() {
     const { selectedNode } = this.props;
     let wed = new WorkflowEngineDefs();
+    // common
     let type = '';
     let name = '';
     let subType = 'undefined';
     let subTypes = ['undefined'];
+    // data and search
+    // tags and decisions
+    let defaultIndex = 0;
+    let key = '';
+    let value = '';
     let script = '';
-    let asynchronous = true;
+    // functions
     let func = '';
+    let param = '';
+    let asynchronous = true;
+    // targets
     if (selectedNode) {
+      // common
       type = selectedNode.nodeType;
       name = selectedNode.name;
       subType = selectedNode.subType;
-      func = selectedNode.func;
-      script = selectedNode.script;
-      asynchronous = selectedNode.asynchronous;
-      if (type === wed.SOURCE) {
-        subTypes = wed.sourceTypes;
+      if (type === wed.DATA) {
+        subTypes = wed.dataTypes;
+      } else if (type === wed.SEARCH) {
+        subTypes = wed.searchTypes;
       } else if (type === wed.TARGET) {
         subTypes = wed.targetTypes;
       } else if (type === wed.DECISION) {
@@ -179,11 +231,123 @@ export class Controls extends React.Component {
       } else if (type === wed.FUNCTION) {
         subTypes = wed.functionTypes;
       }
+      // data and search
+      // tags and decisions
+      if (subType === wed.KEY_VALUE) {
+        defaultIndex = 0;
+      } else if (subType === wed.SCRIPT) {
+        defaultIndex = 1;
+      }
+      key = selectedNode.key;
+      value = selectedNode.value;
+      script = selectedNode.script;
+      // functions
+      func = selectedNode.func;
+      param = selectedNode.param;
+      asynchronous = selectedNode.asynchronous;
+      // targets
     }
     if (this.state.asynchronous !== undefined) {
       asynchronous = this.state.asynchronous === 'on' ? true : false;
     }
+
+    let getCommonInput = () => {
+      return <div>
+        <label className="modal-label">Name: </label>
+        <input className="modal-input" type="text" name="name" defaultValue={name} onChange={this.inputChanged}/>
+      </div>
+    }
     
+    let getSubTypeInput = () => {
+      if (type === wed.TARGET ||
+        type === wed.FUNCTION) {
+        return <div>
+          <label className="modal-label">Sub Type: </label>
+          <select className="m-1 btn btn-primary" name="subType" defaultValue={subType} onChange={this.inputChanged}>/>
+            {
+              subTypes.map(t => { 
+                return (<option key={t} value={t}>{t}</option>);
+              })
+            }
+          </select>
+        </div>
+      }
+    }
+
+    let getDataInput = () => {
+      if (type === wed.DATA) {
+        return <div>
+          <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
+            <TabList>
+              <Tab>Selection</Tab>
+              <Tab>Advanced</Tab>
+            </TabList>
+            <TabPanel>
+              <div>
+                <label className="modal-label">Regular expression (bucket:object): </label>
+                <input className="modal-input" type="text" name="value" defaultValue={value} onChange={this.inputChanged}/>
+              </div>
+            </TabPanel>
+            <TabPanel>
+              <div>
+                <pre>
+                  <textarea className="modal-textarea" name="script" defaultValue={script} onChange={this.inputChanged} rows='5' cols='45'/>
+                </pre>
+              </div>
+            </TabPanel>
+          </Tabs>
+        </div>
+      }
+    }
+
+    let getTagDecisionInput = () => {
+      if (type === wed.TAG ||
+        type === wed.DECISION) {
+        return <div>
+          <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
+            <TabList>
+              <Tab>Selection</Tab>
+              <Tab>Advanced</Tab>
+            </TabList>
+            <TabPanel>
+              <div>
+                <label className="modal-label">Tag name: </label>
+                <input className="modal-input" type="text" name="key" defaultValue={key} onChange={this.inputChanged}/>
+                <label className="modal-label">Value: </label>
+                <input className="modal-input" type="text" name="value" defaultValue={value} onChange={this.inputChanged}/>
+              </div>
+            </TabPanel>
+            <TabPanel>
+              <div>
+                <pre>
+                  <textarea className="modal-textarea" name="script" defaultValue={script} onChange={this.inputChanged} rows='5' cols='45'/>
+                </pre>
+              </div>
+            </TabPanel>
+          </Tabs>
+        </div>
+      }
+    }
+    
+    let getFunctionInput = () => {
+      if (type === wed.FUNCTION) {
+        return <div>
+          <div>
+            <label className="modal-label">Function: </label>
+            <input className="modal-input" type="text" name="func" defaultValue={func} onChange={this.inputChanged}/>
+          </div>
+          <div>
+            <label className="modal-label">Parameter: </label>
+            <input className="modal-input" type="text" name="param" defaultValue={param} onChange={this.inputChanged}/>
+          </div>
+          <div>
+            <label className="modal-label">Asynchronous: </label>
+            <input type="checkbox" name="asynchronous" defaultChecked={asynchronous} onChange={this.inputChanged}/>
+          </div>
+        </div>
+      }
+    }
+
     return <Modal
              isOpen={this.state.modalIsOpen}
              onAfterOpen={this.afterOpenModal}
@@ -195,34 +359,11 @@ export class Controls extends React.Component {
            >
       <h2 className="modal-title">{type}</h2>
       <form onSubmit={this.handleSubmit(type)}>
-        <div>
-          <label className="modal-label">Name: </label>
-          <input type="text" name="name" defaultValue={name} onChange={this.inputChanged}/>
-        </div>
-        <div>
-          <label className="modal-label">Sub Type: </label>
-          <select className="m-1 btn btn-primary" name="subType" defaultValue={subType} onChange={this.inputChanged}>/>
-            {
-              subTypes.map(t => { 
-                return (<option key={t} value={t}>{t}</option>);
-              })
-            }
-          </select>
-        </div>
-        <div>
-          <label className="modal-label">Function: </label>
-          <input type="text" name="func" defaultValue={func} onChange={this.inputChanged}/>
-        </div>
-        <div>
-          <label className="modal-label">Script: </label>
-          <pre>
-            <textarea name="script" defaultValue={script} onChange={this.inputChanged} rows='8' cols='40'/>
-          </pre>
-        </div>
-        <div>
-          <label className="modal-label">Asynchronous: </label>
-          <input type="checkbox" name="asynchronous" defaultChecked={asynchronous} onChange={this.inputChanged}/>
-        </div>
+        { getCommonInput() }
+        { getSubTypeInput() }
+        { getDataInput() }
+        { getTagDecisionInput() }
+        { getFunctionInput() }
         <button className="m-1 btn btn-primary" type="button" onClick={this.closeModal}>Cancel</button>
         <input className="m-1 btn btn-primary" type="submit" value="Submit" />
       </form>

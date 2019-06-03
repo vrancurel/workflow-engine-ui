@@ -2,18 +2,17 @@ import _ from 'lodash';
 import WorkflowEngineDefs from 'workflow-engine-defs';
 import * as RJD from '../../../../../src/main';
 
-export class TagNodeModel extends RJD.NodeModel {
-  constructor(name = 'Untitled', color = 'rgb(224, 98, 20)') {
-    super('tag');
+export class DataNodeModel extends RJD.NodeModel {
+  constructor(name = 'Untitled', color = 'rgb(157, 13, 193)') {
+    super('data');
     this.addPort(new RJD.DefaultPortModel(false, 'output', 'Out'));
-    this.addPort(new RJD.DefaultPortModel(true, 'input', 'In'));
     this.name = name;
     this.color = color;
     let wed = new WorkflowEngineDefs();
-    this.subType = wed.getDefaultTagType();
-    this.key = 'tag1';
-    this.value = 'value1';
-    this.script = '{tag1: \"value1"};';
+    this.subType = wed.getDefaultDataType();
+    this.key = undefined;
+    this.value = '*:*';
+    this.script = 'true;';
   }
 
   deSerialize(object) {
@@ -33,15 +32,11 @@ export class TagNodeModel extends RJD.NodeModel {
       subType: this.subType,
       key: this.key,
       value: this.value,
-      script: this.script,
+      script: this.script
     });
   }
 
-  getInPort() {
-    return this.ports.input;
-  }
-
-  getOutPort() {
-    return this.ports.output;
+  getOutPorts() {
+    return _.filter(this.ports, portModel => !portModel.in);
   }
 }
