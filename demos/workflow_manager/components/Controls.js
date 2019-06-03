@@ -219,17 +219,19 @@ export class Controls extends React.Component {
       name = selectedNode.name;
       subType = selectedNode.subType;
       if (type === wed.DATA) {
-        subTypes = wed.dataTypes;
+        subTypes = wed.dataSubTypes;
       } else if (type === wed.SEARCH) {
-        subTypes = wed.searchTypes;
-      } else if (type === wed.TARGET) {
-        subTypes = wed.targetTypes;
+        subTypes = wed.searchSubTypes;
       } else if (type === wed.DECISION) {
-        subTypes = wed.decisionTypes;
+        subTypes = wed.decisionSubTypes;
       } else if (type === wed.TAG) {
-        subTypes = wed.tagTypes;
+        subTypes = wed.tagSubTypes;
       } else if (type === wed.FUNCTION) {
-        subTypes = wed.functionTypes;
+        subTypes = wed.functionSubTypes;
+      } else if (type === wed.STOPPER) {
+        subTypes = wed.stopperSubTypes;
+      } else if (type === wed.UPDATE) {
+        subTypes = wed.updateSubTypes;
       }
       // data and search
       // tags and decisions

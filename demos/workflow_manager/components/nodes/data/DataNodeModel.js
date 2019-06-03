@@ -9,7 +9,7 @@ export class DataNodeModel extends RJD.NodeModel {
     this.name = name;
     this.color = color;
     let wed = new WorkflowEngineDefs();
-    this.subType = wed.getDefaultDataType();
+    this.subType = wed.getDefaultDataSubType();
     this.key = undefined;
     this.value = '*:*';
     this.script = 'true;';

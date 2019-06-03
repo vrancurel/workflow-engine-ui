@@ -10,7 +10,7 @@ export class FunctionNodeModel extends RJD.NodeModel {
     this.name = name;
     this.color = color;
     let wed = new WorkflowEngineDefs();
-    this.subType = wed.getDefaultFunctionType();
+    this.subType = wed.getDefaultFunctionSubType();
     this.func = undefined;
     this.script = undefined;
     this.asynchronous = false;

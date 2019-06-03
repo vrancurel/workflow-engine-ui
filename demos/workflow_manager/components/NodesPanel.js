@@ -2,10 +2,11 @@ import React from 'react';
 import { DragWrapper } from './DragWrapper';
 import { DataNodeWidget } from './nodes/data/DataNodeWidget';
 import { SearchNodeWidget } from './nodes/search/SearchNodeWidget';
-import { TargetNodeWidget } from './nodes/target/TargetNodeWidget';
 import { TagNodeWidget } from './nodes/tag/TagNodeWidget';
 import { FunctionNodeWidget } from './nodes/function/FunctionNodeWidget';
 import { DecisionNodeWidget } from './nodes/decision/DecisionNodeWidget';
+import { StopperNodeWidget } from './nodes/stopper/StopperNodeWidget';
+import { UpdateNodeWidget } from './nodes/update/UpdateNodeWidget';
 
 class Node extends React.Component {
   renderNode() {
@@ -26,8 +27,11 @@ class Node extends React.Component {
     if (type === 'function') {
       return <FunctionNodeWidget node={{ name: 'Function' }} color={color} displayOnly />;
     }
-    if (type === 'target') {
-      return <TargetNodeWidget node={{ name: 'Target' }} displayOnly />;
+    if (type === 'stopper') {
+      return <StopperNodeWidget node={{ name: 'Stopper' }} displayOnly />;
+    }
+    if (type === 'update') {
+      return <UpdateNodeWidget node={{ name: 'Update' }} displayOnly />;
     }
     console.warn('Unknown node type');
     return null;
@@ -70,7 +74,10 @@ export class NodesPanel extends React.Component {
           <Node type={ 'decision' } />
         </div>
         <div className='node-wrapper'>
-          <Node type={ 'target' } />
+          <Node type={ 'stopper' } />
+        </div>
+        <div className='node-wrapper'>
+          <Node type={ 'update' } />
         </div>
       </div>
     );

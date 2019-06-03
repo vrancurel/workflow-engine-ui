@@ -11,25 +11,30 @@ export class DecisionNodeModel extends RJD.NodeModel {
     this.name = name;
     this.color = color;
     let wed = new WorkflowEngineDefs();
-    this.subType = wed.getDefaultDecisionType();
-    this.script = undefined;
-    this.asynchronous = undefined;
+    this.subType = wed.getDefaultDecisionSubType();
+    this.key = 'tag1';
+    this.value = 'value1';
+    this.script = 'tags.tag1 === \"value1\";';
   }
 
   deSerialize(object) {
     super.deSerialize(object);
     this.name = object.name;
     this.color = object.color;
+    this.subType = object.subType;
+    this.key = object.key;
+    this.value = object.value;
     this.script = object.script;
-    this.asynchronous = object.asynchronous;
   }
 
   serialize() {
     return _.merge(super.serialize(), {
       name: this.name,
       color: this.color,
+      subType: this.subType,
+      key: this.key,
+      value: this.value,
       script: this.script,
-      asynchronous: this.asynchronous
     });
   }
 

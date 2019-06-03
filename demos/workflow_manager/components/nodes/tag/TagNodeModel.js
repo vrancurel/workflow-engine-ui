@@ -10,7 +10,7 @@ export class TagNodeModel extends RJD.NodeModel {
     this.name = name;
     this.color = color;
     let wed = new WorkflowEngineDefs();
-    this.subType = wed.getDefaultTagType();
+    this.subType = wed.getDefaultTagSubType();
     this.key = 'tag1';
     this.value = 'value1';
     this.script = '{tag1: \"value1"};';

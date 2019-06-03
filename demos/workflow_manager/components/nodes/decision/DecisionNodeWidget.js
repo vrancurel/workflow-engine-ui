@@ -1,4 +1,5 @@
 import React from 'react';
+import WorkflowEngineDefs from 'workflow-engine-defs';
 import * as RJD from '../../../../../src/main';
 import { DecisionNodeModel } from './DecisionNodeModel';
 
@@ -50,14 +51,21 @@ export class DecisionNodeWidget extends React.Component {
   render() {
     const { node, displayOnly, color: displayColor } = this.props;
     const { name, color } = node;
-    let { subType, asynchronous } = node;
+    let { subType, key, value } = node;
     const style = {};
     if (color || displayColor) {
       style.background = color || displayColor;
     }
     if (subType === undefined) {
       subType = '';
-    }    
+    }
+    let wed = new WorkflowEngineDefs();
+    if (subType === wed.KEY_VALUE) {
+      if (key !== undefined) {
+        subType = key + ' === ' + (value ? value : '');
+      }
+    }
+
     return (
       <div className='basic-node' style={style}>
         <div className='title'>

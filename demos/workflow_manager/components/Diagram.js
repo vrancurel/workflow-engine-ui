@@ -4,10 +4,11 @@ import { DropTarget } from 'react-dnd';
 import * as RJD from '../../../src/main';
 import { DataNodeModel } from './nodes/data/DataNodeModel';
 import { SearchNodeModel } from './nodes/search/SearchNodeModel';
-import { TargetNodeModel } from './nodes/target/TargetNodeModel';
 import { TagNodeModel } from './nodes/tag/TagNodeModel';
 import { FunctionNodeModel } from './nodes/function/FunctionNodeModel';
 import { DecisionNodeModel } from './nodes/decision/DecisionNodeModel';
+import { StopperNodeModel } from './nodes/stopper/StopperNodeModel';
+import { UpdateNodeModel } from './nodes/update/UpdateNodeModel';
 import { diagramEngine } from './Engine';
 
 // Setup the diagram model
@@ -30,8 +31,11 @@ const nodesTarget = {
     if (item.type === 'search') {
       node = new SearchNodeModel(name, undefined);
     }
-    if (item.type === 'target') {
-      node = new TargetNodeModel(name, undefined);
+    if (item.type === 'stopper') {
+      node = new StopperNodeModel(name, undefined);
+    }
+    if (item.type === 'update') {
+      node = new UpdateNodeModel(name, undefined);
     }
     if (item.type === 'tag') {
         node = new TagNodeModel(name, undefined);

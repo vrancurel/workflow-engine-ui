@@ -9,7 +9,7 @@ export class SearchNodeModel extends RJD.NodeModel {
     this.name = name;
     this.color = color;
     let wed = new WorkflowEngineDefs();
-    this.subType = wed.getDefaultSearchType();
+    this.subType = wed.getDefaultSearchSubType();
     this.key = undefined;
     this.value = undefined;
     this.script = undefined;

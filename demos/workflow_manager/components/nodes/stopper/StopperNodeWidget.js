@@ -1,8 +1,8 @@
 import React from 'react';
 import * as RJD from '../../../../../src/main';
-import { TargetNodeModel } from './TargetNodeModel';
+import { StopperNodeModel } from './StopperNodeModel';
 
-export class TargetNodeWidget extends React.Component {
+export class StopperNodeWidget extends React.Component {
   static defaultProps = {
     node: null,
     color: 'rgb(192, 255, 0)'
@@ -16,13 +16,13 @@ export class TargetNodeWidget extends React.Component {
 
   getInPorts() {
     const { node, color, displayOnly } = this.props;
-    let targetNode = node;
+    let stopperNode = node;
 
     if (displayOnly) {
-      targetNode = new TargetNodeModel(node.name, color);
+      stopperNode = new StopperNodeModel(node.name, color);
     }
 
-    return targetNode.getInPorts ? targetNode.getInPorts().map((port, i) => (
+    return stopperNode.getInPorts ? stopperNode.getInPorts().map((port, i) => (
       <RJD.DefaultPortLabel model={port} key={`in-port-${i}`} />
     )) : [];
   }
@@ -60,4 +60,4 @@ export class TargetNodeWidget extends React.Component {
   }
 }
 
-export const TargetNodeWidgetFactory = React.createFactory(TargetNodeWidget);
+export const StopperNodeWidgetFactory = React.createFactory(StopperNodeWidget);
