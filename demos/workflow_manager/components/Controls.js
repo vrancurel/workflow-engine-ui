@@ -424,13 +424,13 @@ export class Controls extends React.Component {
               <label>Edit</label>
             </div>
             <div>
-              <button className="fa fa-edit m-1 btn btn-w btn-primary" onClick={this.openModal} disabled={!selectedNode}> Edit</button>
+              <button className="m-1 btn btn-w btn-primary" onClick={this.openModal} disabled={!selectedNode}><span className="fa fa-edit"/>Edit</button>
             </div>
             <div>
-              <button className="fa fa-undo m-1 btn btn-w btn-primary" onClick={onUndo} disabled={!canUndo}> Undo</button>
+              <button className="m-1 btn btn-w btn-primary" onClick={onUndo} disabled={!canUndo}><span className="fa fa-undo"/>Undo</button>
             </div>
             <div>
-              <button className="fa fa-repeat m-1 btn btn-w btn-primary" onClick={onRedo} disabled={!canRedo}> Redo</button>
+              <button className="m-1 btn btn-w btn-primary" onClick={onRedo} disabled={!canRedo}><span className="fa fa-repeat"/>Redo</button>
             </div>
           </div>
           <div className="box-border">
@@ -438,7 +438,7 @@ export class Controls extends React.Component {
               <label>Workflow</label>
             </div>
             <div>
-              <button className="fa fa-plus m-1 btn btn-w btn-primary" onClick={this.newWorkflow}> New</button>
+              <button className="m-1 btn btn-w btn-primary" onClick={this.newWorkflow}><span className="fa fa-plus"/>New</button>
             </div>
             <div>
               <input className="m-1 btn btn-w btn-primary" id="myInput"
@@ -447,16 +447,16 @@ export class Controls extends React.Component {
                 style={{display: 'none'}}
                 onChange={this.loadWorkflow}
               />
-              <button className="fa fa-file m-1 btn btn-w btn-primary" onClick={()=>{this.upload.click()}}> Load</button>
+              <button className="m-1 btn btn-w btn-primary" onClick={()=>{this.upload.click()}}><span className="fa fa-file"/>Load</button>
             </div>
             <div>
-              <button className="fa fa-save m-1 btn btn-w btn-primary" onClick={this.saveWorkflow}> Save</button>
+              <button className="m-1 btn btn-w btn-primary" onClick={this.saveWorkflow}><span className="fa fa-save"/>Save</button>
             </div>
             <div>
-              <button className="fa fa-check m-1 btn btn-w btn-primary" onClick={this.checkWorkflow}> Check</button>
+              <button className="m-1 btn btn-w btn-primary" onClick={this.checkWorkflow}><span className="fa fa-check"/>Check</button>
             </div>
             <div>
-              <button className="fa fa-upload m-1 btn btn-w btn-primary" onClick={this.uploadWorkflow}> Upload</button>
+              <button className="m-1 btn btn-w btn-primary" onClick={this.uploadWorkflow}><span className="fa fa-upload"/>Upload</button>
             </div>
           </div>
         </div>

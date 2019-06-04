@@ -36,7 +36,7 @@ html, body, #root {
 .box-title {
     background: #253746 none repeat scroll 0 0;
     display: inline-block;
-    padding: 0 2px;
+    padding: 6px;
     margin-left: 4px;
     color: lightgray
 }
@@ -49,6 +49,10 @@ html, body, #root {
     color: #fff;
     background-color: #00B2A9;
     border-color: #00B2A9;
+}
+
+.btn-primary span {
+    margin-right: 5px;
 }
 
 .btn {
