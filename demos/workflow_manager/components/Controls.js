@@ -32,12 +32,22 @@ export class Controls extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.tabChanged = this.tabChanged.bind(this);
     this.inputChanged = this.inputChanged.bind(this);
+    this.newWorkflow = this.newWorkflow.bind(this);
     this.loadWorkflow = this.loadWorkflow.bind(this);
     this.saveWorkflow = this.saveWorkflow.bind(this);
-    this.generateWorkflow = this.generateWorkflow.bind(this);
+    this.checkWorkflow = this.checkWorkflow.bind(this);
+    this.uploadWorkflow = this.uploadWorkflow.bind(this);
   }
 
   effectivelyLoadWorkflow(newModel) {
+    this.props.updateModel(newModel, { selectedNode: null });
+  }
+
+  newWorkflow(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    const wed = new WorkflowEngineDefs();
+    const newModel = wed.generateNewModel();
     this.props.updateModel(newModel, { selectedNode: null });
   }
   
@@ -48,6 +58,7 @@ export class Controls extends React.Component {
     let that = this;
     let reader = new FileReader();
     reader.onload = function(e) {
+      console.log('ONLOAD');
       that.effectivelyLoadWorkflow(JSON.parse(e.target.result));
     };
     reader.readAsText(file);
@@ -68,13 +79,40 @@ export class Controls extends React.Component {
     document.body.removeChild(a);
   }
 
-  generateWorkflow() {
+  checkWorkflow() {
     const { model } = this.props;
     const wed = new WorkflowEngineDefs(model);
     try {
       wed.checkModel();
     } catch (err) {
       window.confirm(err.message);
+    }
+  }
+
+  uploadWorkflow() {
+    const { model } = this.props;
+    const wed = new WorkflowEngineDefs(model);
+    let foundErr = false;
+    try {
+      wed.checkModel();
+    } catch (err) {
+      window.confirm(err.message);
+      foundErr = true;
+    }
+    if (!foundErr) {
+      const content = JSON.stringify(model);
+      const filename = 'workflow.json';
+      let form = new FormData();
+      form.append('data', new File([new Blob([content])], filename));
+
+      window.fetch('http://localhost:3001/upload', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: form
+      }).then(response => {
+        // expecting opaque response
+        console.log('response', response);
+      });
     }
   }
 
@@ -380,10 +418,9 @@ export class Controls extends React.Component {
     return (
       <div className='controls'>
         <div>
+          <button className="m-1 btn btn-primary" onClick={this.openModal} disabled={!selectedNode}>Edit Node</button>
           <button className="m-1 btn btn-primary" onClick={onUndo} disabled={!canUndo}>Undo</button>
           <button className="m-1 btn btn-primary" onClick={onRedo} disabled={!canRedo}>Redo</button>
-          <br/>
-          <button className="m-1 btn btn-primary" onClick={this.openModal} disabled={!selectedNode}>Edit Node</button>
           <br/>
           <input className="m-1 btn btn-primary" id="myInput"
             type="file"
@@ -391,10 +428,13 @@ export class Controls extends React.Component {
             style={{display: 'none'}}
             onChange={this.loadWorkflow}
           />
+          <button className="m-1 btn btn-primary" onClick={this.newWorkflow}>New Workflow</button>
+          <br/>
           <button className="m-1 btn btn-primary" onClick={()=>{this.upload.click()}}>Load Workflow</button>
           <button className="m-1 btn btn-primary" onClick={this.saveWorkflow}>Save Workflow</button>
           <br/>
-          <button className="m-1 btn btn-primary" onClick={this.generateWorkflow}>Generate Workflow</button>
+          <button className="m-1 btn btn-primary" onClick={this.checkWorkflow}>Check Workflow</button>
+          <button className="m-1 btn btn-primary" onClick={this.uploadWorkflow}>Upload Workflow</button>
         </div>
         <pre>
           {content}

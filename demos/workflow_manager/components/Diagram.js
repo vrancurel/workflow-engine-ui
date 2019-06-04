@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import WorkflowEngineDefs from 'workflow-engine-defs';
 import { DropTarget } from 'react-dnd';
 import * as RJD from '../../../src/main';
 import { DataNodeModel } from './nodes/data/DataNodeModel';
@@ -23,7 +24,7 @@ const nodesTarget = {
     const y = pageY - top - offsetY;
     const item = monitor.getItem();
 
-    const name = 'Node' + diagramModel.getNameCounter();
+    const name = item.type + diagramModel.getNameCounter();
     let node;
     if (item.type === 'data') {
       node = new DataNodeModel(name, undefined);
@@ -63,9 +64,15 @@ const nodesTarget = {
 export class Diagram extends React.Component {
   componentDidMount() {
     const { model } = this.props;
+    let newModel = {};
     if (model) {
-      this.setModel(model);
+      newModel = model;
+    } else {
+      const wed = new WorkflowEngineDefs(model);
+      newModel = wed.generateNewModel();
     }
+    //this.setModel(newModel);
+    this.props.updateModel(newModel, { selectedNode: null });
   }
 
   componentWillReceiveProps(nextProps) {
