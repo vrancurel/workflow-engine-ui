@@ -39,13 +39,16 @@ export class FunctionNodeWidget extends React.Component {
   render() {
     const { node, displayOnly, color: displayColor } = this.props;
     const { name, color } = node;
-    let { subType, asynchronous } = node;
+    let { subType, func, param, asynchronous } = node;
     const style = {};
     if (color || displayColor) {
       style.background = color || displayColor;
     }
     if (subType === undefined) {
       subType = '';
+    }
+    if (func !== undefined) {
+      subType += ': ' + func + '(' + (param ? param : ')');
     }
 
     return (

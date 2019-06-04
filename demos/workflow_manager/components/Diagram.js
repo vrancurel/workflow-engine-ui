@@ -24,7 +24,7 @@ const nodesTarget = {
     const y = pageY - top - offsetY;
     const item = monitor.getItem();
 
-    const name = item.type + diagramModel.getNameCounter();
+    const name = 'Node' + diagramModel.getNameCounter();
     let node;
     if (item.type === 'data') {
       node = new DataNodeModel(name, undefined);

@@ -36,7 +36,11 @@ export class StopperNodeWidget extends React.Component {
       style.background = color || displayColor;
     }
     if (subType === undefined) {
-      subType = '';
+      if (displayOnly) {
+        subType = '';
+      } else {
+        subType = 'stopper';
+      }
     }
 
     return (
