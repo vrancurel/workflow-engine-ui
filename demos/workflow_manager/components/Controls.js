@@ -113,6 +113,8 @@ export class Controls extends React.Component {
       }).then(response => {
         // expecting opaque response
         console.log('response', response);
+      }).catch(err => {
+        window.confirm('Failed to upload: ' + err.message);
       });
     }
   }
