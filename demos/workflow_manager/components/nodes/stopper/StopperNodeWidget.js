@@ -14,6 +14,11 @@ export class StopperNodeWidget extends React.Component {
     diagramEngine.forceUpdate();
   }
 
+  onEdit() {
+    const { node, diagramEngine } = this.props;
+    diagramEngine.openModal();
+  }
+
   getInPorts() {
     const { node, color, displayOnly } = this.props;
     let stopperNode = node;
@@ -49,6 +54,7 @@ export class StopperNodeWidget extends React.Component {
           <div className='name'>
             {name}
           </div>
+          {!displayOnly ? <div className='fa fa-edit' onClick={this.onEdit.bind(this)} /> : null}
           {!displayOnly ? <div className='fa fa-close' onClick={this.onRemove.bind(this)} /> : null}
         </div>
         <div className='sub-type'>
