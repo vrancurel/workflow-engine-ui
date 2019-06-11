@@ -166,6 +166,8 @@ export class Controls extends React.Component {
     // functions
     this.state.func = undefined;
     this.state.param = undefined;
+    this.state.funcAccessKey = undefined;
+    this.state.funcSecretKey = undefined;
     this.state.asynchronous = undefined;
     // targets
   }
@@ -200,6 +202,12 @@ export class Controls extends React.Component {
     if (arg.param !== undefined) {
       node.param = arg.param;
     }
+    if (arg.funcAccessKey !== undefined) {
+      node.funcAccessKey = arg.funcAccessKey;
+    }
+    if (arg.funcSecretKey !== undefined) {
+      node.funcSecretKey = arg.funcSecretKey;
+    }
     if (arg.asynchronous !== undefined) {
       node.asynchronous = arg.asynchronous === 'on' ? true : false;
     }
@@ -225,6 +233,8 @@ export class Controls extends React.Component {
         // functions
         arg.func = this.state.func;
         arg.param = this.state.param;
+        arg.funcAccessKey = this.state.funcAccessKey;
+        arg.funcSecretKey = this.state.funcSecretKey;
         arg.asynchronous = this.state.asynchronous;
         // targets
         diagramModel.modifyNode(selectedNode.getID(), this.modifyNodeCb, arg);
@@ -235,7 +245,7 @@ export class Controls extends React.Component {
     }
   }
 
-  getModal() {
+  showModal() {
     const { selectedNode } = this.props;
     let wed = new WorkflowEngineDefs();
     // common
@@ -252,6 +262,8 @@ export class Controls extends React.Component {
     // functions
     let func = '';
     let param = '';
+    let funcAccessKey = '';
+    let funcSecretKey = '';
     let asynchronous = true;
     // targets
     if (selectedNode) {
@@ -287,6 +299,8 @@ export class Controls extends React.Component {
       // functions
       func = selectedNode.func;
       param = selectedNode.param;
+      funcAccessKey = selectedNode.funcAccessKey;
+      funcSecretKey = selectedNode.funcSecretKey;
       asynchronous = selectedNode.asynchronous;
       // targets
     }
@@ -294,14 +308,14 @@ export class Controls extends React.Component {
       asynchronous = this.state.asynchronous === 'on' ? true : false;
     }
 
-    let getCommonInput = () => {
+    let showCommonInput = () => {
       return <div>
         <label className="modal-label">Name: </label>
         <input className="modal-input" type="text" name="name" defaultValue={name} onChange={this.inputChanged}/>
       </div>
     }
     
-    let getSubTypeInput = () => {
+    let showSubTypeInput = () => {
       if (type === wed.TARGET ||
         type === wed.FUNCTION) {
         return <div>
@@ -317,7 +331,7 @@ export class Controls extends React.Component {
       }
     }
 
-    let getDataInput = () => {
+    let showDataInput = () => {
       if (type === wed.DATA) {
         return <div>
           <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
@@ -343,7 +357,7 @@ export class Controls extends React.Component {
       }
     }
 
-    let getTagDecisionInput = () => {
+    let showTagDecisionInput = () => {
       if (type === wed.TAG ||
         type === wed.DECISION) {
         return <div>
@@ -372,7 +386,7 @@ export class Controls extends React.Component {
       }
     }
     
-    let getFunctionInput = () => {
+    let showFunctionInput = () => {
       if (type === wed.FUNCTION) {
         return <div>
           <div>
@@ -391,6 +405,21 @@ export class Controls extends React.Component {
       }
     }
 
+    let showFunctionAzureKeysInput = () => {
+      if (type === wed.FUNCTION &&
+        (this.state.subType === undefined && 
+          subType === wed.AZURE_FUNCTION) ||
+        (this.state.subType !== undefined &&
+          this.state.subType === wed.AZURE_FUNCTION)) {
+        return <div>
+          <div>
+            <label className="modal-label">Function Key: </label>
+            <input className="modal-input" type="text" name="funcSecretKey" defaultValue={funcSecretKey} onChange={this.inputChanged}/>
+          </div>
+        </div>
+      }
+    }
+
     return <Modal
              isOpen={this.state.modalIsOpen}
              onAfterOpen={this.afterOpenModal}
@@ -402,11 +431,12 @@ export class Controls extends React.Component {
            >
       <h2 className="modal-title">{type}</h2>
       <form onSubmit={this.handleSubmit(type)}>
-        { getCommonInput() }
-        { getSubTypeInput() }
-        { getDataInput() }
-        { getTagDecisionInput() }
-        { getFunctionInput() }
+        { showCommonInput() }
+        { showSubTypeInput() }
+        { showDataInput() }
+        { showTagDecisionInput() }
+        { showFunctionInput() }
+        { showFunctionAzureKeysInput() }
         <button className="m-1 btn btn-primary" type="button" onClick={this.closeModal}>Cancel</button>
         <input className="m-1 btn btn-primary" type="submit" value="Submit" />
       </form>
@@ -465,7 +495,7 @@ export class Controls extends React.Component {
         <pre>
           {content}
         </pre>
-        { this.getModal() }
+        { this.showModal() }
       </div>
     );
   }

@@ -12,7 +12,9 @@ export class FunctionNodeModel extends RJD.NodeModel {
     let wed = new WorkflowEngineDefs();
     this.subType = wed.getDefaultFunctionSubType();
     this.func = undefined;
-    this.script = undefined;
+    this.param = undefined;
+    this.funcAccessKey = undefined;
+    this.funcSecretKey = undefined;
     this.asynchronous = false;
   }
 
@@ -22,7 +24,9 @@ export class FunctionNodeModel extends RJD.NodeModel {
     this.color = object.color;
     this.subType = object.subType;
     this.func = object.func;
-    this.script = object.script;
+    this.param = object.param;
+    this.funcAccessKey = object.funcAccessKey;
+    this.funcSecretKey = object.funcSecretKey;
     this.asynchronous = object.asynchronous;
   }
 
@@ -32,7 +36,9 @@ export class FunctionNodeModel extends RJD.NodeModel {
       color: this.color,
       subType: this.subType,
       func: this.func,
-      script: this.script,
+      param: this.param,
+      funcAccessKey: this.funcAccessKey,
+      funcSecretKey: this.funcSecretKey,
       asynchronous: this.asynchronous
     });
   }

@@ -1,6 +1,10 @@
 import React from 'react';
+import WorkflowEngineDefs from 'workflow-engine-defs';
 import * as RJD from '../../../../../src/main';
 import { FunctionNodeModel } from './FunctionNodeModel';
+import fissionLogo from './fission.png';
+import azureLogo from './azure.png';
+import lambdaLogo from './lambda.png';
 
 export class FunctionNodeWidget extends React.Component {
   static defaultProps = {
@@ -44,13 +48,41 @@ export class FunctionNodeWidget extends React.Component {
     if (color || displayColor) {
       style.background = color || displayColor;
     }
-    if (subType === undefined) {
-      subType = '';
-    }
-    if (func !== undefined) {
-      subType += ': ' + func + '(' + (param ? param : ')');
+
+    let text = '';
+    if (subType !== undefined) {
+      text = (func ? func : '') + '(' + (param ? param : '') + ')';
     }
 
+    let wed = new WorkflowEngineDefs();
+
+    let showLogo = () => {                                                                                              
+      if (subType === wed.FISSION) {
+        return <img className='function-logo' src={fissionLogo}/>
+      } else if (subType === wed.AZURE_FUNCTION) {
+        return <img className='function-logo' src={azureLogo}/>
+      } else if (subType === wed.AWS_LAMBDA) {
+        return <img className='function-logo' src={lambdaLogo}/>
+      } else {
+        return '';
+      }
+    }   
+
+    let showSubType = () => {
+      if (!displayOnly) {
+        return <div className='sub-type'>
+          <div className='function-main'>
+            <div className="function-logo">
+              { showLogo() }
+            </div>
+            <div className="function-text">
+              {text}
+            </div>
+          </div>
+        </div>
+      }
+    }
+    
     return (
       <div className='basic-node' style={style}>
         <div className='title'>
@@ -59,9 +91,7 @@ export class FunctionNodeWidget extends React.Component {
           </div>
           {!displayOnly ? <div className='fa fa-close' onClick={this.onRemove.bind(this)} /> : null}
         </div>
-        <div className='sub-type'>
-          {subType}
-        </div>
+        { showSubType() }
         <div className='ports'>
           <div className='in'>
             {this.getInPort()}

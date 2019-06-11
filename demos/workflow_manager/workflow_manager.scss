@@ -270,8 +270,22 @@ html, body, #root {
   .sub-type {
       color: black;
       text-align: center;
-      margin: 2px
-    }
+      margin: 2px;
+  }
+
+  .function-main {
+      margin: 0 auto;
+      height: 25px;
+  }
+  
+  .function-logo {
+      width: 25px;
+      float: left;
+  }
+  
+  .function-text {
+      padding-top: 3px;
+  }
 
   .ports{
     display: flex;
