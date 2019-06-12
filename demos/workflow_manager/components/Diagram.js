@@ -183,6 +183,13 @@ export class Diagram extends React.Component {
       node.script = arg.script;
       node.subType = wed.SCRIPT;
     }
+    if (arg.tab !== undefined) {
+      if (arg.tab === 1) {
+        node.subType = wed.SCRIPT;
+      } else {
+        node.subType = wed.KEY_VALUE;
+      }
+    }
     // functions
     if (arg.func !== undefined) {
       node.func = arg.func;
@@ -288,7 +295,9 @@ export class Diagram extends React.Component {
             </TabList>
             <TabPanel>
               <div>
-                <label className="modal-label">Regular expression (bucket:object): </label>
+                <label className="modal-label">Bucket regexp: </label>
+                <input className="modal-input" type="text" name="key" defaultValue={this.state.key} onChange={this.inputChanged}/>
+                <label className="modal-label">Object regexp: </label>
                 <input className="modal-input" type="text" name="value" defaultValue={this.state.value} onChange={this.inputChanged}/>
               </div>
             </TabPanel>

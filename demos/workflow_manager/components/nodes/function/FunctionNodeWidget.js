@@ -4,7 +4,8 @@ import * as RJD from '../../../../../src/main';
 import { FunctionNodeModel } from './FunctionNodeModel';
 import fissionLogo from './fission.png';
 import azureLogo from './azure.png';
-import lambdaLogo from './lambda.png';
+import awsLogo from './aws.png';
+import googleLogo from './google.png';
 
 export class FunctionNodeWidget extends React.Component {
   static defaultProps = {
@@ -67,7 +68,9 @@ export class FunctionNodeWidget extends React.Component {
       } else if (subType === wed.AZURE_FUNCTION) {
         return <img className='function-logo' src={azureLogo}/>
       } else if (subType === wed.AWS_LAMBDA) {
-        return <img className='function-logo' src={lambdaLogo}/>
+        return <img className='function-logo' src={awsLogo}/>
+      } else if (subType === wed.GOOGLE_CLOUD_FUNCTION) {
+        return <img className='function-logo' src={googleLogo}/>
       } else {
         return '';
       }

@@ -10,8 +10,8 @@ export class DataNodeModel extends RJD.NodeModel {
     this.color = color;
     let wed = new WorkflowEngineDefs();
     this.subType = wed.getDefaultDataSubType();
-    this.key = undefined;
-    this.value = '*:*';
+    this.key = 'my-bucket';
+    this.value = '*';
     this.script = 'true;';
   }
 

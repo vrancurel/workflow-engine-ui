@@ -36,7 +36,7 @@ export class DataNodeWidget extends React.Component {
   render() {
     const { node, displayOnly, color: displayColor } = this.props;
     const { name, color } = node;
-    let { subType, value } = node;
+    let { subType, key, value } = node;
     const style = {};
     if (color || displayColor) {
       style.background = color || displayColor;
@@ -46,8 +46,8 @@ export class DataNodeWidget extends React.Component {
     }
     let wed = new WorkflowEngineDefs();
     if (subType === wed.KEY_VALUE) {
-      if (value !== undefined) {
-        subType = value;
+      if (key !== undefined) {
+        subType = key + ': ' + (value ? value : '');
       }
     }
 
