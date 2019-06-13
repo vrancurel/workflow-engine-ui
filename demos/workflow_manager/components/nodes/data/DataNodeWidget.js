@@ -44,12 +44,6 @@ export class DataNodeWidget extends React.Component {
     if (subType === undefined) {
       subType = '';
     }
-    let wed = new WorkflowEngineDefs();
-    if (subType === wed.KEY_VALUE) {
-      if (key !== undefined) {
-        subType = key + ': ' + (value ? value : '');
-      }
-    }
 
     return (
       <div className='basic-node' style={style}>

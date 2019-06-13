@@ -57,7 +57,15 @@ export class FunctionNodeWidget extends React.Component {
 
     let text = '';
     if (subType !== undefined) {
-      text = (func ? func : '') + '(' + (param ? param : '') + ')';
+      if (func !== undefined) {
+        const MAXL = 8;
+        if (func.length <= MAXL) {
+          text = func;
+        } else {
+          text = func.substring(0, MAXL) + '...';
+        }
+        text += '()';
+      }
     }
 
     let wed = new WorkflowEngineDefs();

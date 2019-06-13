@@ -14,20 +14,6 @@ import { StopperNodeModel } from './nodes/stopper/StopperNodeModel';
 import { UpdateNodeModel } from './nodes/update/UpdateNodeModel';
 import { diagramEngine } from './Engine';
 
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  },
-  overlay : {
-    zIndex                : 1000
-  }
-};
-
 // Setup the diagram model
 export let diagramModel = new RJD.DiagramModel();
 
@@ -105,13 +91,18 @@ export class Diagram extends React.Component {
   }
 
   tabChanged(index, lastIndex, e) {
-    console.log('tabChanged', index, lastIndex);
     this.state.tab = index;
   }
   
   inputChanged(e) {
-    console.log('INPUT CHANGED');
-    e.preventDefault();
+    console.log('inputChanged', e.target.name, e.target.value, this.state);
+    if (e.target.name === 'https') {
+      if (this.state.https !== undefined) {
+        e.target.value = (this.state.https === 'on' ? 'off' : 'on');
+      }
+    } else {
+      e.preventDefault();
+    }
     this.setState({ [e.target.name]: e.target.value });
   }
 
@@ -135,6 +126,7 @@ export class Diagram extends React.Component {
       param: node.param,
       funcAccessKey: node.funcAccessKey,
       funcSecretKey: node.funcSecretKey,
+      https: node.https ? 'on' : 'off',
       // targets
     });
   }
@@ -156,11 +148,11 @@ export class Diagram extends React.Component {
     this.state.param = undefined;
     this.state.funcAccessKey = undefined;
     this.state.funcSecretKey = undefined;
+    this.state.https = undefined;
     // targets
   }
   
   modifyNodeCb(node, arg) {
-    console.log('ARG', arg);
     let wed = new WorkflowEngineDefs();
     // common
     if (arg.name !== undefined) {
@@ -203,6 +195,9 @@ export class Diagram extends React.Component {
     if (arg.funcSecretKey !== undefined) {
       node.funcSecretKey = arg.funcSecretKey;
     }
+    if (arg.https !== undefined) {
+      node.https = (arg.https === 'on' ? true : false);
+    }
     // targets
   }
 
@@ -210,7 +205,6 @@ export class Diagram extends React.Component {
     return e => {
       e.preventDefault();
       const { selectedNode } = this.props;
-      console.log('HANDLESUBMIT', nodeType, this.state.nodeId);
       if (this.state.nodeId === undefined) {
         throw new Error('a node shall be selected');
       }
@@ -227,9 +221,10 @@ export class Diagram extends React.Component {
       arg.script = this.state.script;
       // functions
       arg.func = this.state.func;
-        arg.param = this.state.param;
+      arg.param = this.state.param;
       arg.funcAccessKey = this.state.funcAccessKey;
       arg.funcSecretKey = this.state.funcSecretKey;
+      arg.https = this.state.https;
       // targets
       diagramModel.modifyNode(this.state.nodeId, this.modifyNodeCb, arg);
       this.props.updateModel(diagramModel.serializeDiagram());
@@ -365,18 +360,36 @@ export class Diagram extends React.Component {
             <label className="modal-label">Function Key: </label>
             <input className="modal-input" type="text" name="funcSecretKey" defaultValue={this.state.funcSecretKey} onChange={this.inputChanged}/>
           </div>
+          <div>
+            <label className="modal-label">Https: </label>
+             <input type="checkbox" name="https" defaultChecked={this.state.https === 'on' ? true : false} onChange={this.inputChanged}/>
+          </div>
         </div>
       }
     }
 
+    // XXX cannot get rid of this
+    const customStyles = {
+      content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)'
+      },
+      overlay: {
+        zIndex: 1000
+      }
+    };
+    
     return <Modal
              isOpen={this.state.modalIsOpen}
              onAfterOpen={this.afterOpenModal}
              onRequestClose={this.closeModal}
-             style={customStyles}
              contentLabel="Edit Node"
+             style={customStyles}
              ariaHideApp={false}
-             overlayClassName="Overlay"
            >
       <h2 className="modal-title">{this.state.nodeType}</h2>
       <form onSubmit={this.handleSubmit(this.state.nodeType)}>
