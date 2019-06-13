@@ -12,7 +12,7 @@ export class DataNodeModel extends RJD.NodeModel {
     this.subType = wed.getDefaultDataSubType();
     this.key = 'my-bucket';
     this.value = '*';
-    this.script = 'true;';
+    this.script = 'Bucket === \'my-bucket\';';
   }
 
   deSerialize(object) {

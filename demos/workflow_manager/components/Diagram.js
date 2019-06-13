@@ -95,10 +95,9 @@ export class Diagram extends React.Component {
   }
   
   inputChanged(e) {
-    console.log('inputChanged', e.target.name, e.target.value, this.state);
-    if (e.target.name === 'https') {
-      if (this.state.https !== undefined) {
-        e.target.value = (this.state.https === 'on' ? 'off' : 'on');
+    if (e.target.name === 'postData') {
+      if (this.state.postData !== undefined) {
+        e.target.value = (this.state.postData === 'on' ? 'off' : 'on');
       }
     } else {
       e.preventDefault();
@@ -126,7 +125,8 @@ export class Diagram extends React.Component {
       param: node.param,
       funcAccessKey: node.funcAccessKey,
       funcSecretKey: node.funcSecretKey,
-      https: node.https ? 'on' : 'off',
+      endpoint: node.endpoint,
+      postData: node.postData ? 'on' : 'off',
       // targets
     });
   }
@@ -148,7 +148,8 @@ export class Diagram extends React.Component {
     this.state.param = undefined;
     this.state.funcAccessKey = undefined;
     this.state.funcSecretKey = undefined;
-    this.state.https = undefined;
+    this.state.endpoint = undefined;
+    this.state.postData = undefined;
     // targets
   }
   
@@ -195,8 +196,11 @@ export class Diagram extends React.Component {
     if (arg.funcSecretKey !== undefined) {
       node.funcSecretKey = arg.funcSecretKey;
     }
-    if (arg.https !== undefined) {
-      node.https = (arg.https === 'on' ? true : false);
+    if (arg.endpoint !== undefined) {
+      node.endpoint = arg.endpoint;
+    }
+    if (arg.postData !== undefined) {
+      node.postData = (arg.postData === 'on' ? true : false);
     }
     // targets
   }
@@ -224,7 +228,8 @@ export class Diagram extends React.Component {
       arg.param = this.state.param;
       arg.funcAccessKey = this.state.funcAccessKey;
       arg.funcSecretKey = this.state.funcSecretKey;
-      arg.https = this.state.https;
+      arg.endpoint = this.state.endpoint;
+      arg.postData = this.state.postData;
       // targets
       diagramModel.modifyNode(this.state.nodeId, this.modifyNodeCb, arg);
       this.props.updateModel(diagramModel.serializeDiagram());
@@ -361,8 +366,12 @@ export class Diagram extends React.Component {
             <input className="modal-input" type="text" name="funcSecretKey" defaultValue={this.state.funcSecretKey} onChange={this.inputChanged}/>
           </div>
           <div>
-            <label className="modal-label">Https: </label>
-             <input type="checkbox" name="https" defaultChecked={this.state.https === 'on' ? true : false} onChange={this.inputChanged}/>
+            <label className="modal-label">Endpoint: </label>
+            <input className="modal-input" type="text" name="endpoint" defaultValue={this.state.endpoint} onChange={this.inputChanged}/>
+          </div>
+          <div>
+            <label className="modal-label">PostData: </label>
+             <input type="checkbox" name="postData" defaultChecked={this.state.postData === 'on' ? true : false} onChange={this.inputChanged}/>
           </div>
         </div>
       }

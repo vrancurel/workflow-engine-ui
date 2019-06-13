@@ -15,11 +15,8 @@ export class FunctionNodeModel extends RJD.NodeModel {
     this.param = undefined;
     this.funcAccessKey = undefined;
     this.funcSecretKey = undefined;
-    if (this.subType === wed.AZURE_FUNCTION) {
-      this.https = true;
-    } else {
-      this.https = false;
-    }
+    this.endpoint = undefined;
+    this.postData = false;
     this.asynchronous = false;
   }
 
@@ -32,7 +29,8 @@ export class FunctionNodeModel extends RJD.NodeModel {
     this.param = object.param;
     this.funcAccessKey = object.funcAccessKey;
     this.funcSecretKey = object.funcSecretKey;
-    this.https = object.https;
+    this.endpoint = object.endpoint;
+    this.postData = object.postData;
     this.asynchronous = object.asynchronous;
   }
 
@@ -45,7 +43,8 @@ export class FunctionNodeModel extends RJD.NodeModel {
       param: this.param,
       funcAccessKey: this.funcAccessKey,
       funcSecretKey: this.funcSecretKey,
-      https: this.https,
+      endpoint: this.endpoint,
+      postData: this.postData,
       asynchronous: this.asynchronous
     });
   }
