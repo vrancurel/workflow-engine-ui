@@ -14,6 +14,7 @@ export class TagNodeModel extends RJD.NodeModel {
     this.key = 'tag1';
     this.value = 'value1';
     this.script = '{tag1: \"value1"};';
+    this.replace = false;
   }
 
   deSerialize(object) {
@@ -24,6 +25,7 @@ export class TagNodeModel extends RJD.NodeModel {
     this.key = object.key;
     this.value = object.value;
     this.script = object.script;
+    this.replace = object.replace;
   }
 
   serialize() {
@@ -34,6 +36,7 @@ export class TagNodeModel extends RJD.NodeModel {
       key: this.key,
       value: this.value,
       script: this.script,
+      replace: this.replace
     });
   }
 

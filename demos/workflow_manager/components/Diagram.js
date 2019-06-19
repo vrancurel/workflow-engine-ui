@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import Modal from 'react-modal';
+import Cron from 'react-cron-generator';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import WorkflowEngineDefs from 'workflow-engine-defs';
 import { DropTarget } from 'react-dnd';
@@ -95,9 +96,14 @@ export class Diagram extends React.Component {
   }
   
   inputChanged(e) {
+    console.log('EVENT', e);
     if (e.target.name === 'postData') {
       if (this.state.postData !== undefined) {
         e.target.value = (this.state.postData === 'on' ? 'off' : 'on');
+      }
+    } else if (e.target.name === 'replace') {
+      if (this.state.replace !== undefined) {
+        e.target.value = (this.state.replace === 'on' ? 'off' : 'on');
       }
     } else {
       e.preventDefault();
@@ -116,10 +122,12 @@ export class Diagram extends React.Component {
       name: node.name,
       subType: node.subType,
       // data and search
+      cronRule: node.cronRule,
       // tags and decisions
       key: node.key,
       value: node.value,
       script: node.script,
+      replace: node.replace ? 'on' : 'off',
       // functions
       func: node.func,
       param: node.param,
@@ -139,10 +147,12 @@ export class Diagram extends React.Component {
     this.state.subType = undefined;
     this.state.tab = undefined;
     // data and search
+    this.state.cronRule = undefined;
     // tag and decision
     this.state.key = undefined;
     this.state.value = undefined;
     this.state.script = undefined;
+    this.replace = undefined;
     // functions
     this.state.func = undefined;
     this.state.param = undefined;
@@ -163,6 +173,9 @@ export class Diagram extends React.Component {
       node.subType = arg.subType;
     }
     // data and search
+    if (arg.cronRule !== undefined) {
+      node.cronRule = arg.cronRule;
+    }
     // tag and decision
     if (arg.key !== undefined) {
       node.key = arg.key;
@@ -175,6 +188,9 @@ export class Diagram extends React.Component {
     if (arg.script !== undefined) {
       node.script = arg.script;
       node.subType = wed.SCRIPT;
+    }
+    if (arg.replace !== undefined) {
+      node.replace = (arg.replace === 'on' ? true : false);
     }
     if (arg.tab !== undefined) {
       if (arg.tab === 1) {
@@ -219,10 +235,12 @@ export class Diagram extends React.Component {
       arg.subType = this.state.subType;
       arg.tab = this.state.tab;
       // data and search
+      arg.cronRule = this.state.cronRule;
       // tags and decisions
       arg.key = this.state.key;
       arg.value = this.state.value;
       arg.script = this.state.script;
+      arg.replace = this.state.replace;
       // functions
       arg.func = this.state.func;
       arg.param = this.state.param;
@@ -313,31 +331,75 @@ export class Diagram extends React.Component {
       }
     }
 
+    let showSearchInput = () => {
+      if (this.state.nodeType === wed.SEARCH) {
+        return <div>
+          <div>
+            <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
+              <TabList>
+                <Tab>Selection</Tab>
+                <Tab>Advanced</Tab>
+              </TabList>
+              <TabPanel>
+                <div>
+                  <label className="modal-label">Bucket: </label>
+                  <input className="modal-input" type="text" name="key" defaultValue={this.state.key} onChange={this.inputChanged}/>
+                  <label className="modal-label">Object regexp: </label>
+                  <input className="modal-input" type="text" name="value" defaultValue={this.state.value} onChange={this.inputChanged}/>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <div>
+                  <pre>
+                    <textarea className="modal-textarea" name="script" defaultValue={this.state.script} onChange={this.inputChanged} rows='5' cols='45'/>
+                  </pre>
+                </div>
+              </TabPanel>
+            </Tabs>
+          </div>
+          <div className="modal-cronbuilder">
+            <Cron
+              onChange={(e)=> {this.setState({cronRule:e});}}
+              cronExpression={this.state.cronRule}
+              showResultText={false}
+              showResultcron={false}
+            />
+          </div>
+        </div>
+      }
+    }
+
     let showTagDecisionInput = () => {
       if (this.state.nodeType === wed.TAG ||
         this.state.nodeType === wed.DECISION) {
         return <div>
-          <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
-            <TabList>
-              <Tab>Selection</Tab>
-              <Tab>Advanced</Tab>
-            </TabList>
-            <TabPanel>
-              <div>
-                <label className="modal-label">Tag name: </label>
-                <input className="modal-input" type="text" name="key" defaultValue={this.state.key} onChange={this.inputChanged}/>
-                <label className="modal-label">Value: </label>
-                <input className="modal-input" type="text" name="value" defaultValue={this.state.value} onChange={this.inputChanged}/>
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <div>
-                <pre>
-                  <textarea className="modal-textarea" name="script" defaultValue={this.state.script} onChange={this.inputChanged} rows='5' cols='45'/>
-                </pre>
-              </div>
-            </TabPanel>
-          </Tabs>
+          <div>
+            <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
+              <TabList>
+                <Tab>Selection</Tab>
+                <Tab>Advanced</Tab>
+              </TabList>
+              <TabPanel>
+                <div>
+                  <label className="modal-label">Tag name: </label>
+                  <input className="modal-input" type="text" name="key" defaultValue={this.state.key} onChange={this.inputChanged}/>
+                  <label className="modal-label">Value: </label>
+                  <input className="modal-input" type="text" name="value" defaultValue={this.state.value} onChange={this.inputChanged}/>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <div>
+                  <pre>
+                    <textarea className="modal-textarea" name="script" defaultValue={this.state.script} onChange={this.inputChanged} rows='5' cols='45'/>
+                  </pre>
+                </div>
+              </TabPanel>
+            </Tabs>
+          </div>
+          <div>
+            <label className="modal-label">Replace (instead of merge) tags: </label>
+            <input type="checkbox" name="replace" defaultChecked={this.state.replace === 'on' ? true : false} onChange={this.inputChanged}/>
+          </div>
         </div>
       }
     }
@@ -405,6 +467,7 @@ export class Diagram extends React.Component {
         { showCommonInput() }
         { showSubTypeInput() }
         { showDataInput() }
+        { showSearchInput() }
         { showTagDecisionInput() }
         { showFunctionInput() }
         { showFunctionAzureKeysInput() }

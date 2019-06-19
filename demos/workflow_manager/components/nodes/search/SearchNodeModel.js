@@ -13,6 +13,7 @@ export class SearchNodeModel extends RJD.NodeModel {
     this.key = undefined;
     this.value = undefined;
     this.script = undefined;
+    this.cronRule = undefined;
   }
 
   deSerialize(object) {
@@ -23,6 +24,7 @@ export class SearchNodeModel extends RJD.NodeModel {
     this.key = object.key;
     this.value = object.value;
     this.script = object.script;
+    this.cronRule = object.cronRule;
   }
 
   serialize() {
@@ -32,7 +34,8 @@ export class SearchNodeModel extends RJD.NodeModel {
       subType: this.subType,
       key: this.key,
       value: this.value,
-      script: this.script
+      script: this.script,
+      cronRule: this.cronRule
     });
   }
 

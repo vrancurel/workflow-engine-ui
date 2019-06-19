@@ -167,9 +167,112 @@ html, body, #root {
     font-weight: 300;
     line-height: 1.5;
     border-top-color: lightgray;
-    margin-top: 2px
+    margin-top: 2px;
 }
 
+.modal-cronbuilder {
+    margin-top: 2px;
+}
+
+.cron_builder_bordering {
+    border: 1px solid #ddd;
+    border-top: none;
+    text-align: left;
+    padding: 10px;
+}
+
+.cron_builder_bordering input {
+    width: 100px;
+    margin-right: 10px;
+    margin-left: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    padding-left: 5px;
+    cursor: pointer;
+}
+
+.cron-builder-bg {
+    background-color: #086090;
+    color: white;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.cron_builder_bordering select {
+    background-color: white;
+    width: 75px;
+    cursor: pointer;
+    padding: 4px 0px;
+    border-radius: 4px;
+}
+
+.cron_builder_bordering select option:hover {
+    background-color: #086090;
+}
+
+.well-small input {
+    width: auto !important;
+    margin-top: 3px;
+}
+
+.cron_builder_bordering  input[type='radio'] {
+    margin-top: 0px;
+    vertical-align: middle;
+}
+
+.cron_builder {
+    border: 1px solid #d0cbcb;
+    padding: 5px;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    .text_align_left {
+        text-align: left;
+    }
+    
+    .nav-tabs {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .nav li {
+        //float: left;
+	border: 1px solid #bbb;
+	border-bottom-width: 0;
+	margin: 0;
+        position: relative;
+        display: inline-block;
+    }
+
+    .nav ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+    }
+    
+    .nav a {
+	text-decoration: none;
+	display: block;
+	padding: 0.24em 1em;
+	text-align: center;
+    }
+    
+    .nav a:hover {
+	background: #ddf;
+    }
+    
+    .nav .active {
+	position: relative;
+	top: 1px;
+	background: white;
+	color: black;
+	font-weight: bold;
+    }
+}
+    
 .parent-container {
   flex: 1;
   display: flex;
