@@ -50,13 +50,17 @@ export class DecisionNodeWidget extends React.Component {
       decisionNode = new DecisionNodeModel(node.name, color);
     }
 
-    return decisionNode.getOut2Port ? <RJD.DefaultPortLabel model={decisionNode.getOut2Port()} key='out2-port' /> : null;
+    return decisionNode.getOut2Port ?
+      <RJD.DefaultPortLabel
+        model={decisionNode.getOut2Port()}
+        key='out2-port' /> : null;
   }
 
   render() {
     const { node, displayOnly, color: displayColor } = this.props;
     const { name, color } = node;
-    let { subType, key, value } = node;
+    let { subType } = node;
+    const { key, value } = node;
     const style = {};
     if (color || displayColor) {
       style.background = color || displayColor;

@@ -49,7 +49,7 @@ export class FunctionNodeWidget extends React.Component {
   render() {
     const { node, displayOnly, color: displayColor } = this.props;
     const { name, color } = node;
-    let { subType, func, param, asynchronous } = node;
+    const { subType, func, param, asynchronous } = node;
     const style = {};
     if (color || displayColor) {
       style.background = color || displayColor;
@@ -62,29 +62,30 @@ export class FunctionNodeWidget extends React.Component {
         if (func.length <= MAXL) {
           text = func;
         } else {
-          text = func.substring(0, MAXL) + '...';
+          text = func.substring(0, MAXL);
+          text += '...';
         }
         text += '()';
       }
     }
 
-    let wed = new WorkflowEngineDefs();
+    const wed = new WorkflowEngineDefs();
 
-    let showLogo = () => {                                                                                              
+    const showLogo = () => {
       if (subType === wed.FISSION) {
-        return <img className='function-logo' src={fissionLogo}/>
+        return <img className='function-logo' src={fissionLogo}/>;
       } else if (subType === wed.AZURE_FUNCTION) {
-        return <img className='function-logo' src={azureLogo}/>
+        return <img className='function-logo' src={azureLogo}/>;
       } else if (subType === wed.AWS_LAMBDA) {
-        return <img className='function-logo' src={awsLogo}/>
+        return <img className='function-logo' src={awsLogo}/>;
       } else if (subType === wed.GOOGLE_CLOUD_FUNCTION) {
-        return <img className='function-logo' src={googleLogo}/>
+        return <img className='function-logo' src={googleLogo}/>;
       } else {
         return '';
       }
-    }   
+    };
 
-    let showSubType = () => {
+    const showSubType = () => {
       if (!displayOnly) {
         return <div className='sub-type'>
           <div className='function-main'>
@@ -95,9 +96,9 @@ export class FunctionNodeWidget extends React.Component {
               {text}
             </div>
           </div>
-        </div>
+        </div>;
       }
-    }
+    };
     
     return (
       <div className='basic-node' style={style}>

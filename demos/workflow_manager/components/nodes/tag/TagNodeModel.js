@@ -9,7 +9,7 @@ export class TagNodeModel extends RJD.NodeModel {
     this.addPort(new RJD.DefaultPortModel(true, 'input', 'In'));
     this.name = name;
     this.color = color;
-    let wed = new WorkflowEngineDefs();
+    const wed = new WorkflowEngineDefs();
     this.subType = wed.getDefaultTagSubType();
     this.key = 'tag1';
     this.value = 'value1';

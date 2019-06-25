@@ -9,7 +9,7 @@ export class FunctionNodeModel extends RJD.NodeModel {
     this.addPort(new RJD.DefaultPortModel(true, 'input', 'In'));
     this.name = name;
     this.color = color;
-    let wed = new WorkflowEngineDefs();
+    const wed = new WorkflowEngineDefs();
     this.subType = wed.getDefaultFunctionSubType();
     this.func = undefined;
     this.param = undefined;

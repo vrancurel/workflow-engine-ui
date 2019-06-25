@@ -45,7 +45,8 @@ export class TagNodeWidget extends React.Component {
   render() {
     const { node, displayOnly, color: displayColor } = this.props;
     const { name, color } = node;
-    let { subType, key, value } = node;
+    let { subType } = node;
+    const { key, value } = node;
     const style = {};
     if (color || displayColor) {
       style.background = color || displayColor;

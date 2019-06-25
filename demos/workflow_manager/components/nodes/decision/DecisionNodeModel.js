@@ -10,7 +10,7 @@ export class DecisionNodeModel extends RJD.NodeModel {
     this.addPort(new RJD.DefaultPortModel(false, 'output2', 'False'));
     this.name = name;
     this.color = color;
-    let wed = new WorkflowEngineDefs();
+    const wed = new WorkflowEngineDefs();
     this.subType = wed.getDefaultDecisionSubType();
     this.key = 'tag1';
     this.value = 'value1';

@@ -53,7 +53,8 @@ export class NodesPanel extends React.Component {
     return (
       <div className='nodes-panel'>
         <div className="icon-zenko-logo-align">
-          <img className="icon-zenko-logo" src="https://d37uysqk07vju5.cloudfront.net/1be33ac5e10f5826f60bf845f908e7d1f2b5e3e4/assets/img/logo-icon.png"/>
+          <img className="icon-zenko-logo"
+            src="https://d37uysqk07vju5.cloudfront.net/1be33ac5e10f5826f60bf845f908e7d1f2b5e3e4/assets/img/logo-icon.png"/>
         </div>
         <div className="nodes-panel-title">
           WORKFLOW MANAGER

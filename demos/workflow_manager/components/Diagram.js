@@ -27,7 +27,8 @@ const nodesTarget = {
     const y = pageY - top - offsetY;
     const item = monitor.getItem();
 
-    const name = 'Node' + diagramModel.getNameCounter();
+    const nameCounter = diagramModel.getNameCounter();
+    const name = `${item.type}${nameCounter}`; 
     let node;
     if (item.type === 'data') {
       node = new DataNodeModel(name, undefined);
@@ -42,10 +43,10 @@ const nodesTarget = {
       node = new UpdateNodeModel(name, undefined);
     }
     if (item.type === 'tag') {
-        node = new TagNodeModel(name, undefined);
+      node = new TagNodeModel(name, undefined);
     }
     if (item.type === 'function') {
-        node = new FunctionNodeModel(name, undefined);
+      node = new FunctionNodeModel(name, undefined);
     }
     if (item.type === 'decision') {
       node = new DecisionNodeModel(name, undefined);
@@ -65,12 +66,12 @@ const nodesTarget = {
 }))
 
 export class Diagram extends React.Component {
-    constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {
       modalIsOpen: false,
     };
-
+    
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -80,7 +81,7 @@ export class Diagram extends React.Component {
   }
   
   openModal() {
-    this.setState({modalIsOpen: true});
+    this.setState({ modalIsOpen: true });
   }
 
   afterOpenModal() {
@@ -88,7 +89,7 @@ export class Diagram extends React.Component {
   }
 
   closeModal() {
-    this.setState({modalIsOpen: false});
+    this.setState({ modalIsOpen: false });
   }
 
   tabChanged(index, lastIndex, e) {
@@ -96,7 +97,6 @@ export class Diagram extends React.Component {
   }
   
   inputChanged(e) {
-    console.log('EVENT', e);
     if (e.target.name === 'postData') {
       if (this.state.postData !== undefined) {
         e.target.value = (this.state.postData === 'on' ? 'off' : 'on');
@@ -164,7 +164,7 @@ export class Diagram extends React.Component {
   }
   
   modifyNodeCb(node, arg) {
-    let wed = new WorkflowEngineDefs();
+    const wed = new WorkflowEngineDefs();
     // common
     if (arg.name !== undefined) {
       node.name = arg.name;
@@ -190,7 +190,7 @@ export class Diagram extends React.Component {
       node.subType = wed.SCRIPT;
     }
     if (arg.replace !== undefined) {
-      node.replace = (arg.replace === 'on' ? true : false);
+      node.replace = (arg.replace === 'on');
     }
     if (arg.tab !== undefined) {
       if (arg.tab === 1) {
@@ -216,7 +216,7 @@ export class Diagram extends React.Component {
       node.endpoint = arg.endpoint;
     }
     if (arg.postData !== undefined) {
-      node.postData = (arg.postData === 'on' ? true : false);
+      node.postData = (arg.postData === 'on');
     }
     // targets
   }
@@ -228,7 +228,7 @@ export class Diagram extends React.Component {
       if (this.state.nodeId === undefined) {
         throw new Error('a node shall be selected');
       }
-      let arg = {};
+      const arg = {};
       // common
       arg.nodeType = nodeType;
       arg.name = this.state.name;
@@ -253,11 +253,11 @@ export class Diagram extends React.Component {
       this.props.updateModel(diagramModel.serializeDiagram());
       this.resetModalState();
       this.closeModal();
-    }
+    };
   }
 
   showModal() {
-    let wed = new WorkflowEngineDefs();
+    const wed = new WorkflowEngineDefs();
     let subTypes = ['undefined'];
     // common
     if (this.state.nodeType === wed.DATA) {
@@ -271,7 +271,7 @@ export class Diagram extends React.Component {
     } else if (this.state.nodeType === wed.FUNCTION) {
       subTypes = wed.functionSubTypes;
     } else if (this.state.nodeType === wed.STOPPER) {
-        subTypes = wed.stopperSubTypes;
+      subTypes = wed.stopperSubTypes;
     } else if (this.state.nodeType === wed.UPDATE) {
       subTypes = wed.updateSubTypes;
     }
@@ -280,30 +280,37 @@ export class Diagram extends React.Component {
       defaultIndex = 1;
     }
 
-    let showCommonInput = () => {
+    const showCommonInput = () => {
       return <div>
         <label className="modal-label">Name: </label>
-        <input className="modal-input" type="text" name="name" defaultValue={this.state.name} onChange={this.inputChanged}/>
-      </div>
-    }
+        <input className="modal-input"
+          type="text"
+          name="name"
+          defaultValue={this.state.name}
+          onChange={this.inputChanged}/>
+      </div>;
+    };
     
-    let showSubTypeInput = () => {
+    const showSubTypeInput = () => {
       if (this.state.nodeType === wed.TARGET ||
         this.state.nodeType === wed.FUNCTION) {
         return <div>
           <label className="modal-label">Sub Type: </label>
-          <select className="m-1 btn btn-primary" name="subType" defaultValue={this.state.subType} onChange={this.inputChanged}>/>
+          <select className="m-1 btn btn-primary"
+            name="subType"
+            defaultValue={this.state.subType}
+            onChange={this.inputChanged}>/>
             {
               subTypes.map(t => { 
                 return (<option key={t} value={t}>{t}</option>);
               })
             }
           </select>
-        </div>
+        </div>;
       }
-    }
+    };
 
-    let showDataInput = () => {
+    const showDataInput = () => {
       if (this.state.nodeType === wed.DATA) {
         return <div>
           <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
@@ -313,25 +320,41 @@ export class Diagram extends React.Component {
             </TabList>
             <TabPanel>
               <div>
-                <label className="modal-label">Bucket regexp: </label>
-                <input className="modal-input" type="text" name="key" defaultValue={this.state.key} onChange={this.inputChanged}/>
-                <label className="modal-label">Object regexp: </label>
-                <input className="modal-input" type="text" name="value" defaultValue={this.state.value} onChange={this.inputChanged}/>
+                <label className="modal-label">
+                  Bucket regexp:
+                </label>
+                <input className="modal-input"
+                  type="text"
+                  name="key"
+                  defaultValue={this.state.key}
+                  onChange={this.inputChanged}/>
+                <label className="modal-label">
+                  Object regexp:
+                </label>
+                <input className="modal-input"
+                  type="text"
+                  name="value"
+                  defaultValue={this.state.value}
+                  onChange={this.inputChanged}/>
               </div>
             </TabPanel>
             <TabPanel>
               <div>
                 <pre>
-                  <textarea className="modal-textarea" name="script" defaultValue={this.state.script} onChange={this.inputChanged} rows='5' cols='45'/>
+                  <textarea className="modal-textarea"
+                    name="script"
+                    defaultValue={this.state.script}
+                    onChange={this.inputChanged}
+                    rows='5' cols='45'/>
                 </pre>
               </div>
             </TabPanel>
           </Tabs>
-        </div>
+        </div>;
       }
-    }
+    };
 
-    let showSearchInput = () => {
+    const showSearchInput = () => {
       if (this.state.nodeType === wed.SEARCH) {
         return <div>
           <div>
@@ -343,15 +366,26 @@ export class Diagram extends React.Component {
               <TabPanel>
                 <div>
                   <label className="modal-label">Bucket: </label>
-                  <input className="modal-input" type="text" name="key" defaultValue={this.state.key} onChange={this.inputChanged}/>
+                  <input className="modal-input" type="text"
+                    name="key"
+                    defaultValue={this.state.key}
+                    onChange={this.inputChanged}/>
                   <label className="modal-label">Object regexp: </label>
-                  <input className="modal-input" type="text" name="value" defaultValue={this.state.value} onChange={this.inputChanged}/>
+                  <input className="modal-input"
+                    type="text"
+                    name="value"
+                    defaultValue={this.state.value}
+                    onChange={this.inputChanged}/>
                 </div>
               </TabPanel>
               <TabPanel>
                 <div>
                   <pre>
-                    <textarea className="modal-textarea" name="script" defaultValue={this.state.script} onChange={this.inputChanged} rows='5' cols='45'/>
+                    <textarea className="modal-textarea"
+                      name="script"
+                      defaultValue={this.state.script}
+                      onChange={this.inputChanged}
+                      rows='5' cols='45'/>
                   </pre>
                 </div>
               </TabPanel>
@@ -359,17 +393,17 @@ export class Diagram extends React.Component {
           </div>
           <div className="modal-cronbuilder">
             <Cron
-              onChange={(e)=> {this.setState({cronRule:e});}}
-              cronExpression={this.state.cronRule}
+              onChange={ (e) => {this.setState({ cronRule:e }); } }
+              value={this.state.cronRule}
               showResultText={false}
               showResultcron={false}
             />
           </div>
-        </div>
+        </div>;
       }
-    }
+    };
 
-    let showTagDecisionInput = () => {
+    const showTagDecisionInput = () => {
       if (this.state.nodeType === wed.TAG ||
         this.state.nodeType === wed.DECISION) {
         return <div>
@@ -382,15 +416,27 @@ export class Diagram extends React.Component {
               <TabPanel>
                 <div>
                   <label className="modal-label">Tag name: </label>
-                  <input className="modal-input" type="text" name="key" defaultValue={this.state.key} onChange={this.inputChanged}/>
+                  <input className="modal-input"
+                    type="text"
+                    name="key"
+                    defaultValue={this.state.key}
+                    onChange={this.inputChanged}/>
                   <label className="modal-label">Value: </label>
-                  <input className="modal-input" type="text" name="value" defaultValue={this.state.value} onChange={this.inputChanged}/>
+                  <input className="modal-input"
+                    type="text"
+                    name="value"
+                    defaultValue={this.state.value}
+                    onChange={this.inputChanged}/>
                 </div>
               </TabPanel>
               <TabPanel>
                 <div>
                   <pre>
-                    <textarea className="modal-textarea" name="script" defaultValue={this.state.script} onChange={this.inputChanged} rows='5' cols='45'/>
+                    <textarea className="modal-textarea"
+                      name="script"
+                      defaultValue={this.state.script}
+                      onChange={this.inputChanged}
+                      rows='5' cols='45'/>
                   </pre>
                 </div>
               </TabPanel>
@@ -398,46 +444,68 @@ export class Diagram extends React.Component {
           </div>
           <div>
             <label className="modal-label">Replace (instead of merge) tags: </label>
-            <input type="checkbox" name="replace" defaultChecked={this.state.replace === 'on' ? true : false} onChange={this.inputChanged}/>
+            <input type="checkbox"
+              name="replace"
+              defaultChecked={this.state.replace === 'on'}
+              onChange={this.inputChanged}/>
           </div>
-        </div>
+        </div>;
       }
-    }
+    };
     
-    let showFunctionInput = () => {
+    const showFunctionInput = () => {
       if (this.state.nodeType === wed.FUNCTION) {
         return <div>
           <div>
             <label className="modal-label">Function: </label>
-            <input className="modal-input" type="text" name="func" defaultValue={this.state.func} onChange={this.inputChanged}/>
+            <input className="modal-input"
+              type="text"
+              name="func"
+              defaultValue={this.state.func}
+              onChange={this.inputChanged}/>
           </div>
           <div>
             <label className="modal-label">Parameter: </label>
-            <input className="modal-input" type="text" name="param" defaultValue={this.state.param} onChange={this.inputChanged}/>
+            <input className="modal-input"
+              type="text"
+              name="param"
+              defaultValue={this.state.param}
+              onChange={this.inputChanged}/>
           </div>
-        </div>
+        </div>;
       }
-    }
+    };
 
-    let showFunctionAzureKeysInput = () => {
+    const showFunctionAzureKeysInput = () => {
       if (this.state.nodeType === wed.FUNCTION &&
         this.state.subType === wed.AZURE_FUNCTION) {
         return <div>
           <div>
             <label className="modal-label">Function Key: </label>
-            <input className="modal-input" type="text" name="funcSecretKey" defaultValue={this.state.funcSecretKey} onChange={this.inputChanged}/>
+            <input className="modal-input"
+              type="text"
+              name="funcSecretKey"
+              defaultValue={this.state.funcSecretKey}
+              onChange={this.inputChanged}/>
           </div>
           <div>
             <label className="modal-label">Endpoint: </label>
-            <input className="modal-input" type="text" name="endpoint" defaultValue={this.state.endpoint} onChange={this.inputChanged}/>
+            <input className="modal-input"
+              type="text"
+              name="endpoint"
+              defaultValue={this.state.endpoint}
+              onChange={this.inputChanged}/>
           </div>
           <div>
             <label className="modal-label">PostData: </label>
-             <input type="checkbox" name="postData" defaultChecked={this.state.postData === 'on' ? true : false} onChange={this.inputChanged}/>
+            <input type="checkbox"
+              name="postData"
+              defaultChecked={this.state.postData === 'on'}
+              onChange={this.inputChanged}/>
           </div>
-        </div>
+        </div>;
       }
-    }
+    };
 
     // XXX cannot get rid of this
     const customStyles = {
@@ -474,7 +542,7 @@ export class Diagram extends React.Component {
         <button className="m-1 btn btn-primary" type="button" onClick={this.closeModal}>Cancel</button>
         <input className="m-1 btn btn-primary" type="submit" value="Submit" />
       </form>
-    </Modal>
+    </Modal>;
   }
   
   componentDidMount() {

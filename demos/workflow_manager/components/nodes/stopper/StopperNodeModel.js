@@ -8,7 +8,6 @@ export class StopperNodeModel extends RJD.NodeModel {
     this.addPort(new RJD.DefaultPortModel(true, 'input', 'In'));
     this.name = name;
     this.color = color;
-    let wed = new WorkflowEngineDefs();
   }
 
   deSerialize(object) {

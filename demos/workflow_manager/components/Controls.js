@@ -27,14 +27,12 @@ export class Controls extends React.Component {
   }
   
   loadWorkflow(event) {
-    console.log('loadWorkflow', event);
     event.stopPropagation();
     event.preventDefault();
     var file = event.target.files[0];
-    let that = this;
-    let reader = new FileReader();
+    const that = this;
+    const reader = new FileReader();
     reader.onload = function(e) {
-      console.log('ONLOAD');
       that.effectivelyLoadWorkflow(JSON.parse(e.target.result));
     };
     reader.readAsText(file);
@@ -44,11 +42,12 @@ export class Controls extends React.Component {
     const { model } = this.props;
     event.stopPropagation();
     event.preventDefault();
-    let filename = "workflow.json";
-    let contentType = "application/json;charset=utf-8;";
-    let a = document.createElement('a');
+    const filename = 'workflow.json';
+    const contentType = 'application/json;charset=utf-8;';
+    const a = document.createElement('a');
     a.download = filename;
-    a.href = 'data:' + contentType + ',' + encodeURIComponent(JSON.stringify(model));
+    const modelEncoded = encodeURIComponent(JSON.stringify(model));
+    a.href = `data:${contentType},${modelEncoded}`;
     a.target = '_blank';
     document.body.appendChild(a);
     a.click();
@@ -78,7 +77,7 @@ export class Controls extends React.Component {
     if (!foundErr) {
       const content = JSON.stringify(model);
       const filename = 'workflow.json';
-      let form = new FormData();
+      const form = new FormData();
       form.append('data', new File([new Blob([content])], filename));
 
       window.fetch('http://localhost:3001/upload', {
@@ -87,9 +86,8 @@ export class Controls extends React.Component {
         body: form
       }).then(response => {
         // expecting opaque response
-        console.log('response', response);
       }).catch(err => {
-        window.confirm('Failed to upload: ' + err.message);
+        window.confirm('Failed to upload');
       });
     }
   }
@@ -97,8 +95,9 @@ export class Controls extends React.Component {
   render() {
     const { selectedNode, onUndo, onRedo, canUndo, canRedo } = this.props;
 
-    const content = selectedNode ? JSON.stringify(selectedNode.serialize(), null, 2) : '';
-
+    const content = selectedNode ?
+      JSON.stringify(selectedNode.serialize(), null, 2) : '';
+    
     return (
       <div className='controls'>
         <div>
@@ -107,10 +106,16 @@ export class Controls extends React.Component {
               <label>Edit</label>
             </div>
             <div>
-              <button className="m-1 btn btn-w btn-primary" onClick={onUndo} disabled={!canUndo}><span className="fa fa-undo"/>Undo</button>
+              <button className="m-1 btn btn-w btn-primary"
+                onClick={onUndo}
+                disabled={!canUndo}>
+                <span className="fa fa-undo"/>Undo</button>
             </div>
             <div>
-              <button className="m-1 btn btn-w btn-primary" onClick={onRedo} disabled={!canRedo}><span className="fa fa-repeat"/>Redo</button>
+              <button className="m-1 btn btn-w btn-primary"
+                onClick={onRedo}
+                disabled={!canRedo}>
+                <span className="fa fa-repeat"/>Redo</button>
             </div>
           </div>
           <div className="box-border">
@@ -118,30 +123,40 @@ export class Controls extends React.Component {
               <label>Workflow</label>
             </div>
             <div>
-              <button className="m-1 btn btn-w btn-primary" onClick={this.newWorkflow}><span className="fa fa-plus"/>New</button>
+              <button className="m-1 btn btn-w btn-primary"
+                onClick={this.newWorkflow}>
+                <span className="fa fa-plus"/>New</button>
             </div>
             <div>
               <input className="m-1 btn btn-w btn-primary" id="myInput"
                 type="file"
-                ref={(ref) => this.upload = ref}
-                style={{display: 'none'}}
-                onChange={this.loadWorkflow}
+                ref={ (ref) => this.upload = ref }
+                style={ { display: 'none' } }
+                onChange={ this.loadWorkflow }
               />
-              <button className="m-1 btn btn-w btn-primary" onClick={()=>{this.upload.click()}}><span className="fa fa-file"/>Load</button>
+              <button className="m-1 btn btn-w btn-primary"
+                onClick={ () => { this.upload.click(); } }>
+                <span className="fa fa-file"/>Load</button>
             </div>
             <div>
-              <button className="m-1 btn btn-w btn-primary" onClick={this.saveWorkflow}><span className="fa fa-save"/>Save</button>
+              <button className="m-1 btn btn-w btn-primary"
+                onClick={ this.saveWorkflow }>
+                <span className="fa fa-save"/>Save</button>
             </div>
             <div>
-              <button className="m-1 btn btn-w btn-primary" onClick={this.checkWorkflow}><span className="fa fa-check"/>Check</button>
+              <button className="m-1 btn btn-w btn-primary"
+                onClick={ this.checkWorkflow }>
+                <span className="fa fa-check"/>Check</button>
             </div>
             <div>
-              <button className="m-1 btn btn-w btn-primary" onClick={this.uploadWorkflow}><span className="fa fa-upload"/>Upload</button>
+              <button className="m-1 btn btn-w btn-primary"
+                onClick={ this.uploadWorkflow }>
+                <span className="fa fa-upload"/>Upload</button>
             </div>
           </div>
         </div>
         <pre>
-          {content}
+          { content }
         </pre>
       </div>
     );

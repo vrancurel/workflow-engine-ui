@@ -8,7 +8,7 @@ export class SearchNodeModel extends RJD.NodeModel {
     this.addPort(new RJD.DefaultPortModel(false, 'output', 'Out'));
     this.name = name;
     this.color = color;
-    let wed = new WorkflowEngineDefs();
+    const wed = new WorkflowEngineDefs();
     this.subType = wed.getDefaultSearchSubType();
     this.key = undefined;
     this.value = undefined;
