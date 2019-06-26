@@ -6,12 +6,40 @@ import { diagramEngine } from './Engine';
 export class Controls extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showName: false,
+      name: 'workflow'
+    };
 
     this.newWorkflow = this.newWorkflow.bind(this);
     this.loadWorkflow = this.loadWorkflow.bind(this);
     this.saveWorkflow = this.saveWorkflow.bind(this);
     this.checkWorkflow = this.checkWorkflow.bind(this);
     this.uploadWorkflow = this.uploadWorkflow.bind(this);
+    this.inputChanged = this.inputChanged.bind(this);
+    this.cancelName = this.cancelName.bind(this);
+    this.okName = this.okName.bind(this);
+  }
+
+  inputChanged(e) {
+    console.log('EVENT', e);
+    e.preventDefault();
+    this.setState({ name: e.target.value });
+  }
+
+  cancelName(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.setState({ showName: false });
+  }
+
+  okName(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.setState({ showName: false });
+    const wed = new WorkflowEngineDefs();
+    const newModel = wed.generateNewModel(this.state.name);
+    this.props.updateModel(newModel, { selectedNode: null });
   }
 
   effectivelyLoadWorkflow(newModel) {
@@ -21,9 +49,7 @@ export class Controls extends React.Component {
   newWorkflow(event) {
     event.stopPropagation();
     event.preventDefault();
-    const wed = new WorkflowEngineDefs();
-    const newModel = wed.generateNewModel();
-    this.props.updateModel(newModel, { selectedNode: null });
+    this.setState({ showName: true });
   }
   
   loadWorkflow(event) {
@@ -97,7 +123,26 @@ export class Controls extends React.Component {
 
     const content = selectedNode ?
       JSON.stringify(selectedNode.serialize(), null, 2) : '';
-    
+
+    const showWorkflowName = () => {
+      if (this.state.showName) {
+        return <div>
+          <input
+            type="text"
+            name="name"
+            defaultValue={this.state.name}
+            onChange={this.inputChanged}/>
+          <button onClick={this.cancelName}>
+            Cancel
+          </button>
+          <button
+            onClick={this.okName}>
+            Ok
+          </button>
+        </div>;
+      }
+    };
+
     return (
       <div className='controls'>
         <div>
@@ -127,6 +172,7 @@ export class Controls extends React.Component {
                 onClick={this.newWorkflow}>
                 <span className="fa fa-plus"/>New</button>
             </div>
+            { showWorkflowName() }
             <div>
               <input className="m-1 btn btn-w btn-primary" id="myInput"
                 type="file"
