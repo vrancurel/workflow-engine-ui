@@ -7,8 +7,8 @@ export class Controls extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showName: false,
-      name: 'workflow'
+      showFileName: false,
+      fileName: undefined
     };
 
     this.newWorkflow = this.newWorkflow.bind(this);
@@ -17,29 +17,42 @@ export class Controls extends React.Component {
     this.checkWorkflow = this.checkWorkflow.bind(this);
     this.uploadWorkflow = this.uploadWorkflow.bind(this);
     this.inputChanged = this.inputChanged.bind(this);
-    this.cancelName = this.cancelName.bind(this);
-    this.okName = this.okName.bind(this);
+    this.setFileName = this.setFileName.bind(this);
+    this.cancelFileName = this.cancelFileName.bind(this);
+    this.okFileName = this.okFileName.bind(this);
   }
 
   inputChanged(e) {
-    console.log('EVENT', e);
     e.preventDefault();
-    this.setState({ name: e.target.value });
+    this.setState({
+      fileName: e.target.value,
+    });
   }
 
-  cancelName(event) {
+  cancelFileName(event) {
     event.stopPropagation();
     event.preventDefault();
-    this.setState({ showName: false });
+    this.setState({
+      showFileName: false,
+      fileName: undefined
+    });
   }
 
-  okName(event) {
+  okFileName(event) {
+    const { model } = this.props;
     event.stopPropagation();
     event.preventDefault();
-    this.setState({ showName: false });
-    const wed = new WorkflowEngineDefs();
-    const newModel = wed.generateNewModel(this.state.name);
-    this.props.updateModel(newModel, { selectedNode: null });
+    this.setState({
+      showFileName: false
+    });
+  }
+
+  setFileName(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.setState({
+      showFileName: true
+    });
   }
 
   effectivelyLoadWorkflow(newModel) {
@@ -49,7 +62,12 @@ export class Controls extends React.Component {
   newWorkflow(event) {
     event.stopPropagation();
     event.preventDefault();
-    this.setState({ showName: true });
+    const wed = new WorkflowEngineDefs();
+    this.setState({
+      fileName: undefined,
+    });
+    const newModel = wed.generateNewModel();
+    this.props.updateModel(newModel, { selectedNode: null });
   }
   
   loadWorkflow(event) {
@@ -66,12 +84,15 @@ export class Controls extends React.Component {
   
   saveWorkflow(event) {
     const { model } = this.props;
+    if (this.state.fileName === undefined) {
+      window.confirm('missing file name');
+      return ;
+    }
     event.stopPropagation();
     event.preventDefault();
-    const filename = 'workflow.json';
     const contentType = 'application/json;charset=utf-8;';
     const a = document.createElement('a');
-    a.download = filename;
+    a.download = this.state.fileName;
     const modelEncoded = encodeURIComponent(JSON.stringify(model));
     a.href = `data:${contentType},${modelEncoded}`;
     a.target = '_blank';
@@ -93,29 +114,30 @@ export class Controls extends React.Component {
   uploadWorkflow() {
     const { model } = this.props;
     const wed = new WorkflowEngineDefs(model);
-    let foundErr = false;
+    if (this.state.fileName === undefined) {
+      window.confirm('set a file name to workflow');
+      return ;
+    }
     try {
       wed.checkModel();
     } catch (err) {
       window.confirm(err.message);
-      foundErr = true;
+      return ;
     }
-    if (!foundErr) {
-      const content = JSON.stringify(model);
-      const filename = 'workflow.json';
-      const form = new FormData();
-      form.append('data', new File([new Blob([content])], filename));
-
-      window.fetch('http://localhost:3001/upload', {
-        method: 'POST',
-        mode: 'no-cors',
-        body: form
-      }).then(response => {
-        // expecting opaque response
-      }).catch(err => {
-        window.confirm('Failed to upload');
-      });
-    }
+    const content = JSON.stringify(model);
+    const filename = this.state.fileName;
+    const form = new FormData();
+    form.append('data', new File([new Blob([content])], filename));
+    
+    window.fetch('http://localhost:3001/upload', {
+      method: 'POST',
+      mode: 'no-cors',
+      body: form
+    }).then(response => {
+      // expecting opaque response
+    }).catch(err => {
+      window.confirm('Failed to upload');
+    });
   }
 
   render() {
@@ -124,21 +146,26 @@ export class Controls extends React.Component {
     const content = selectedNode ?
       JSON.stringify(selectedNode.serialize(), null, 2) : '';
 
-    const showWorkflowName = () => {
-      if (this.state.showName) {
+    const showFileName = () => {
+      if (this.state.showFileName) {
         return <div>
-          <input
-            type="text"
-            name="name"
-            defaultValue={this.state.name}
-            onChange={this.inputChanged}/>
-          <button onClick={this.cancelName}>
-            Cancel
-          </button>
-          <button
-            onClick={this.okName}>
-            Ok
-          </button>
+          <div>
+            <input className='workflow-name'
+              type="text"
+              name="name"
+              defaultValue={this.state.fileName}
+              onChange={this.inputChanged}/>
+          </div>
+          <div className='workflow-name-button'>
+            <button
+              onClick={this.cancelFileName}>
+              Cancel
+            </button>
+            <button
+              onClick={this.okFileName}>
+              Ok
+            </button>
+          </div>
         </div>;
       }
     };
@@ -172,7 +199,6 @@ export class Controls extends React.Component {
                 onClick={this.newWorkflow}>
                 <span className="fa fa-plus"/>New</button>
             </div>
-            { showWorkflowName() }
             <div>
               <input className="m-1 btn btn-w btn-primary" id="myInput"
                 type="file"
@@ -194,6 +220,12 @@ export class Controls extends React.Component {
                 onClick={ this.checkWorkflow }>
                 <span className="fa fa-check"/>Check</button>
             </div>
+            <div>
+              <button className="m-1 btn btn-w btn-primary"
+                onClick={this.setFileName}>
+                <span className="fa fa-chevron-right"/>Set File Name</button>
+            </div>
+            { showFileName() }
             <div>
               <button className="m-1 btn btn-w btn-primary"
                 onClick={ this.uploadWorkflow }>
