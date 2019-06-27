@@ -93,7 +93,7 @@ export class Diagram extends React.Component {
   }
 
   tabChanged(index, lastIndex, e) {
-    this.state.tab = index;
+    this.setState({ tab: index });
   }
   
   inputChanged(e) {
@@ -128,6 +128,7 @@ export class Diagram extends React.Component {
       value: node.value,
       script: node.script,
       replace: node.replace ? 'on' : 'off',
+      operator: node.operator,
       // functions
       func: node.func,
       param: node.param,
@@ -140,83 +141,65 @@ export class Diagram extends React.Component {
   }
   
   resetModalState() {
-    // common to all nodes
-    this.state.nodeId = undefined;
-    this.state.nodeType = undefined;
-    this.state.name = undefined;
-    this.state.subType = undefined;
-    this.state.tab = undefined;
-    // data and search
-    this.state.cronRule = undefined;
-    // tag and decision
-    this.state.key = undefined;
-    this.state.value = undefined;
-    this.state.script = undefined;
-    this.replace = undefined;
-    // functions
-    this.state.func = undefined;
-    this.state.param = undefined;
-    this.state.funcAccessKey = undefined;
-    this.state.funcSecretKey = undefined;
-    this.state.endpoint = undefined;
-    this.state.postData = undefined;
-    // targets
+    this.setState({
+      modalIsOpen: false
+    });
   }
   
-  modifyNodeCb(node, arg) {
+  modifyNodeCb(node) {
     const wed = new WorkflowEngineDefs();
     // common
-    if (arg.name !== undefined) {
-      node.name = arg.name;
+    if (this.state.name !== undefined) {
+      node.name = this.state.name;
     }
-    if (arg.subType !== undefined) {
-      node.subType = arg.subType;
+    if (this.state.subType !== undefined) {
+      node.subType = this.state.subType;
     }
     // data and search
-    if (arg.cronRule !== undefined) {
-      node.cronRule = arg.cronRule;
+    if (this.state.cronRule !== undefined) {
+      node.cronRule = this.state.cronRule;
     }
     // tag and decision
-    if (arg.key !== undefined) {
-      node.key = arg.key;
-      node.subType = wed.KEY_VALUE;
+    if (this.state.key !== undefined) {
+      node.key = this.state.key;
     }
-    if (arg.value !== undefined) {
-      node.value = arg.value;
-      node.subType = wed.KEY_VALUE;
+    if (this.state.value !== undefined) {
+      node.value = this.state.value;
     }
-    if (arg.script !== undefined) {
-      node.script = arg.script;
-      node.subType = wed.SCRIPT;
+    if (this.state.operator !== undefined) {
+      node.operator = this.state.operator;
     }
-    if (arg.replace !== undefined) {
-      node.replace = (arg.replace === 'on');
+    if (this.state.script !== undefined) {
+      node.script = this.state.script;
     }
-    if (arg.tab !== undefined) {
-      if (arg.tab === 1) {
-        node.subType = wed.SCRIPT;
+    if (this.state.replace !== undefined) {
+      node.replace = (this.state.replace === 'on');
+    }
+    if (this.state.tab !== undefined) {
+      if (this.state.tab === 1) {
+        node.subType = wed.SUB_TYPE_ADVANCED;
       } else {
-        node.subType = wed.KEY_VALUE;
+        node.subType = wed.SUB_TYPE_BASIC;
       }
     }
     // functions
-    if (arg.func !== undefined) {
-      node.func = arg.func;
+    if (this.state.func !== undefined) {
+      node.func = this.state.func;
     }
-    if (arg.param !== undefined) {
-      node.param = arg.param;
+    if (this.state.param !== undefined) {
+      node.param = this.state.param;
     }
-    if (arg.funcAccessKey !== undefined) {
-      node.funcAccessKey = arg.funcAccessKey;
+    if (this.state.funcAccessKey !== undefined) {
+      node.funcAccessKey = this.state.funcAccessKey;
     }
-    if (arg.funcSecretKey !== undefined) {
-      node.funcSecretKey = arg.funcSecretKey;
+    if (this.state.funcSecretKey !== undefined) {
+      node.funcSecretKey = this.state.funcSecretKey;
     }
-    if (arg.endpoint !== undefined) {
-      node.endpoint = arg.endpoint;
+    if (this.state.endpoint !== undefined) {
+      node.endpoint = this.state.endpoint;
     }
-    if (arg.postData !== undefined) {
-      node.postData = (arg.postData === 'on');
+    if (this.state.postData !== undefined) {
+      node.postData = (this.state.postData === 'on');
     }
     // targets
   }
@@ -228,28 +211,7 @@ export class Diagram extends React.Component {
       if (this.state.nodeId === undefined) {
         throw new Error('a node shall be selected');
       }
-      const arg = {};
-      // common
-      arg.nodeType = nodeType;
-      arg.name = this.state.name;
-      arg.subType = this.state.subType;
-      arg.tab = this.state.tab;
-      // data and search
-      arg.cronRule = this.state.cronRule;
-      // tags and decisions
-      arg.key = this.state.key;
-      arg.value = this.state.value;
-      arg.script = this.state.script;
-      arg.replace = this.state.replace;
-      // functions
-      arg.func = this.state.func;
-      arg.param = this.state.param;
-      arg.funcAccessKey = this.state.funcAccessKey;
-      arg.funcSecretKey = this.state.funcSecretKey;
-      arg.endpoint = this.state.endpoint;
-      arg.postData = this.state.postData;
-      // targets
-      diagramModel.modifyNode(this.state.nodeId, this.modifyNodeCb, arg);
+      diagramModel.modifyNode(this.state.nodeId, this.modifyNodeCb.bind(this));
       this.props.updateModel(diagramModel.serializeDiagram());
       this.resetModalState();
       this.closeModal();
@@ -258,25 +220,9 @@ export class Diagram extends React.Component {
 
   showModal() {
     const wed = new WorkflowEngineDefs();
-    let subTypes = ['undefined'];
-    // common
-    if (this.state.nodeType === wed.DATA) {
-      subTypes = wed.dataSubTypes;
-    } else if (this.state.nodeType === wed.SEARCH) {
-      subTypes = wed.searchSubTypes;
-    } else if (this.state.nodeType === wed.DECISION) {
-      subTypes = wed.decisionSubTypes;
-    } else if (this.state.nodeType === wed.TAG) {
-      subTypes = wed.tagSubTypes;
-    } else if (this.state.nodeType === wed.FUNCTION) {
-      subTypes = wed.functionSubTypes;
-    } else if (this.state.nodeType === wed.STOPPER) {
-      subTypes = wed.stopperSubTypes;
-    } else if (this.state.nodeType === wed.UPDATE) {
-      subTypes = wed.updateSubTypes;
-    }
+
     let defaultIndex = 0;
-    if (this.state.subType === wed.SCRIPT) {
+    if (this.state.subType === wed.SUB_TYPE_ADVANCED) {
       defaultIndex = 1;
     }
 
@@ -291,31 +237,12 @@ export class Diagram extends React.Component {
       </div>;
     };
     
-    const showSubTypeInput = () => {
-      if (this.state.nodeType === wed.TARGET ||
-        this.state.nodeType === wed.FUNCTION) {
-        return <div>
-          <label className="modal-label">Sub Type: </label>
-          <select className="m-1 btn btn-primary"
-            name="subType"
-            defaultValue={this.state.subType}
-            onChange={this.inputChanged}>/>
-            {
-              subTypes.map(t => { 
-                return (<option key={t} value={t}>{t}</option>);
-              })
-            }
-          </select>
-        </div>;
-      }
-    };
-
     const showDataInput = () => {
-      if (this.state.nodeType === wed.DATA) {
+      if (this.state.nodeType === wed.TYPE_DATA) {
         return <div>
           <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
             <TabList>
-              <Tab>Selection</Tab>
+              <Tab>Basic</Tab>
               <Tab>Advanced</Tab>
             </TabList>
             <TabPanel>
@@ -355,12 +282,12 @@ export class Diagram extends React.Component {
     };
 
     const showSearchInput = () => {
-      if (this.state.nodeType === wed.SEARCH) {
+      if (this.state.nodeType === wed.TYPE_SEARCH) {
         return <div>
           <div>
             <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
               <TabList>
-                <Tab>Selection</Tab>
+                <Tab>Basic</Tab>
                 <Tab>Advanced</Tab>
               </TabList>
               <TabPanel>
@@ -379,6 +306,16 @@ export class Diagram extends React.Component {
                 </div>
               </TabPanel>
               <TabPanel>
+                <div>
+                  <label className="modal-label">
+                    Bucket:
+                  </label>
+                  <input className="modal-input"
+                    type="text"
+                    name="key"
+                    defaultValue={this.state.key}
+                    onChange={this.inputChanged}/>
+                </div>
                 <div>
                   <pre>
                     <textarea className="modal-textarea"
@@ -403,14 +340,13 @@ export class Diagram extends React.Component {
       }
     };
 
-    const showTagDecisionInput = () => {
-      if (this.state.nodeType === wed.TAG ||
-        this.state.nodeType === wed.DECISION) {
+    const showTagInput = () => {
+      if (this.state.nodeType === wed.TYPE_TAG) {
         return <div>
           <div>
             <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
               <TabList>
-                <Tab>Selection</Tab>
+                <Tab>Basic</Tab>
                 <Tab>Advanced</Tab>
               </TabList>
               <TabPanel>
@@ -452,10 +388,75 @@ export class Diagram extends React.Component {
         </div>;
       }
     };
-    
-    const showFunctionInput = () => {
-      if (this.state.nodeType === wed.FUNCTION) {
+
+    const showDecisionInput = () => {
+      if (this.state.nodeType === wed.TYPE_DECISION) {
         return <div>
+          <div>
+            <Tabs defaultIndex={defaultIndex} onSelect={this.tabChanged}>
+              <TabList>
+                <Tab>Basic</Tab>
+                <Tab>Advanced</Tab>
+              </TabList>
+              <TabPanel>
+                <div>
+                  <label className="modal-label">Tag name: </label>
+                  <input className="modal-input"
+                    type="text"
+                    name="key"
+                    defaultValue={this.state.key}
+                    onChange={this.inputChanged}/>
+                  <select className="m-1 btn btn-primary"
+                    name="operator"
+                    defaultValue={this.state.operator}
+                    onChange={this.inputChanged}>/>
+                    {
+                      wed.decisionBasicOperators.map(t => { 
+                        return (<option key={t} value={t}>{t}</option>);
+                      })
+                    }
+                  </select>
+                  <label className="modal-label">Value: </label>
+                  <input className="modal-input"
+                    type="text"
+                    name="value"
+                    defaultValue={this.state.value}
+                    onChange={this.inputChanged}/>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <div>
+                  <pre>
+                    <textarea className="modal-textarea"
+                      name="script"
+                      defaultValue={this.state.script}
+                      onChange={this.inputChanged}
+                      rows='5' cols='45'/>
+                  </pre>
+                </div>
+              </TabPanel>
+            </Tabs>
+          </div>
+        </div>;
+      }
+    };
+
+    const showFunctionInput = () => {
+      if (this.state.nodeType === wed.TYPE_FUNCTION) {
+        return <div>
+          <div>
+            <label className="modal-label">Sub Type: </label>
+            <select className="m-1 btn btn-primary"
+              name="subType"
+              defaultValue={this.state.subType}
+              onChange={this.inputChanged}>/>
+              {
+                wed.functionSubTypes.map(t => { 
+                  return (<option key={t} value={t}>{t}</option>);
+                })
+              }
+            </select>
+          </div>
           <div>
             <label className="modal-label">Function: </label>
             <input className="modal-input"
@@ -477,8 +478,8 @@ export class Diagram extends React.Component {
     };
 
     const showFunctionAzureKeysInput = () => {
-      if (this.state.nodeType === wed.FUNCTION &&
-        this.state.subType === wed.AZURE_FUNCTION) {
+      if (this.state.nodeType === wed.TYPE_FUNCTION &&
+        this.state.subType === wed.SUB_TYPE_AZURE_FUNCTION) {
         return <div>
           <div>
             <label className="modal-label">Function Key: </label>
@@ -533,10 +534,10 @@ export class Diagram extends React.Component {
       <h2 className="modal-title">{this.state.nodeType}</h2>
       <form onSubmit={this.handleSubmit(this.state.nodeType)}>
         { showCommonInput() }
-        { showSubTypeInput() }
         { showDataInput() }
         { showSearchInput() }
-        { showTagDecisionInput() }
+        { showTagInput() }
+        { showDecisionInput() }
         { showFunctionInput() }
         { showFunctionAzureKeysInput() }
         <button className="m-1 btn btn-primary" type="button" onClick={this.closeModal}>Cancel</button>

@@ -13,6 +13,7 @@ export class DecisionNodeModel extends RJD.NodeModel {
     const wed = new WorkflowEngineDefs();
     this.subType = wed.getDefaultDecisionSubType();
     this.key = 'tag1';
+    this.operator = '==';
     this.value = 'value1';
     this.script = 'tags.tag1 === \"value1\";';
   }
@@ -23,6 +24,7 @@ export class DecisionNodeModel extends RJD.NodeModel {
     this.color = object.color;
     this.subType = object.subType;
     this.key = object.key;
+    this.operator = object.operator;
     this.value = object.value;
     this.script = object.script;
   }
@@ -33,6 +35,7 @@ export class DecisionNodeModel extends RJD.NodeModel {
       color: this.color,
       subType: this.subType,
       key: this.key,
+      operator: this.operator,
       value: this.value,
       script: this.script,
     });

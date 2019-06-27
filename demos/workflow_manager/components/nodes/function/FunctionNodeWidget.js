@@ -72,13 +72,13 @@ export class FunctionNodeWidget extends React.Component {
     const wed = new WorkflowEngineDefs();
 
     const showLogo = () => {
-      if (subType === wed.FISSION) {
+      if (subType === wed.SUB_TYPE_FISSION) {
         return <img className='function-logo' src={fissionLogo}/>;
-      } else if (subType === wed.AZURE_FUNCTION) {
+      } else if (subType === wed.SUB_TYPE_AZURE_FUNCTION) {
         return <img className='function-logo' src={azureLogo}/>;
-      } else if (subType === wed.AWS_LAMBDA) {
+      } else if (subType === wed.SUB_TYPE_AWS_LAMBDA) {
         return <img className='function-logo' src={awsLogo}/>;
-      } else if (subType === wed.GOOGLE_CLOUD_FUNCTION) {
+      } else if (subType === wed.SUB_TYPE_GOOGLE_CLOUD_FUNCTION) {
         return <img className='function-logo' src={googleLogo}/>;
       } else {
         return '';
