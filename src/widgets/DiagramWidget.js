@@ -407,6 +407,11 @@ export class DiagramWidget extends React.Component {
         // This is a drag canvas event
         const relative = diagramEngine.getRelativePoint(event.pageX, event.pageY);
         diagramModel.clearSelection();
+
+        this.setState({
+          action: new MoveCanvasAction(relative.x, relative.y, diagramModel),
+          actionType: 'canvas-click'
+        });
       }
     } else if (model.model instanceof PortModel) {
       const { linkInstanceFactory } = diagramEngine;
