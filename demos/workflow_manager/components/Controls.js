@@ -77,7 +77,7 @@ export class Controls extends React.Component {
     const form = new FormData();
     form.append('data', new File([new Blob([content])], filename));
     
-    window.fetch('http://localhost:3001/upload', {
+    window.fetch('http://localhost:3001/_/upload', {
       method: 'POST',
       mode: 'no-cors',
       body: form
