@@ -11,6 +11,7 @@ export class DiagramModel extends BaseEntity {
     this.offsetY = 0;
     this.zoom = 100;
     this.rendered = false;
+    this.nameCounter = 0;
   }
 
   deSerializeDiagram(object, diagramEngine) {
@@ -18,6 +19,7 @@ export class DiagramModel extends BaseEntity {
     this.offsetX = object.offsetX;
     this.offsetY = object.offsetY;
     this.zoom = object.zoom;
+    this.nameCounter = object.nameCounter;
 
     // Deserialize nodes
     _.forEach(object.nodes, node => {
@@ -57,6 +59,7 @@ export class DiagramModel extends BaseEntity {
       offsetX: this.offsetX,
       offsetY: this.offsetY,
       zoom: this.zoom,
+      nameCounter: this.nameCounter,
       links: _.map(this.links, link => link.serialize()),
       nodes: _.map(this.nodes, link => link.serialize())
     };
@@ -189,6 +192,15 @@ export class DiagramModel extends BaseEntity {
     return node;
   }
 
+  getNameCounter() {
+    return this.nameCounter;
+  }
+  
+  addNodeBumpNameCounter(node) {
+    this.nameCounter++;
+    return this.addNode(node);
+  }
+  
   removeLink(link) {
     if (link instanceof LinkModel) {
       delete this.links[link.getID()];
