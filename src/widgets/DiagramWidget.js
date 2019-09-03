@@ -492,6 +492,10 @@ export class DiagramWidget extends React.Component {
     if (element === null) {
       // No element, this is a canvas event
       // actionOutput.type = 'canvas-event';
+      if (actionType === 'canvas-click') {
+        // do not generate undo event
+        actionOutput.type = 'unknown';
+      }
       actionOutput.event = event;
     } else if (action instanceof MoveItemsAction) {
       // Add the node model to the output
