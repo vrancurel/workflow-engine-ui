@@ -506,19 +506,51 @@ export class DiagramWidget extends React.Component {
         // Only care about points connecting to things or being created
         if (model.model instanceof PointModel) {
           // Check if a point was created
-          if (element.element.tagName === 'circle' && actionOutput.type !== 'link-created') {
-            actionOutput.type = 'point-created';
+          if (element.element.tagName === 'circle') {
+            if (actionOutput.type !== 'link-created') {
+              actionOutput.type = 'point-created';
+            } else {
+              // disallow links pointing nowhere
+              diagramEngine.getDiagramModel().getLink(
+                model.model.getLink()).remove();
+            }
           }
 
           if (element.model instanceof PortModel) {
-            // Connect the link
-            model.model.getLink().setTargetPort(element.model);
+            if (element.model.getName() != 'input') {
+              // allow only input ports
+              diagramEngine.getDiagramModel().getLink(
+                model.model.getLink()).remove();
+            } else {
+              const newLink = model.model.getLink();
+              let foundBadLink = false;
+              // check for duplicate link
+              _.forEach(diagramEngine.getDiagramModel().getLinks(), link => {
+                if (newLink.getSourcePort() === link.getSourcePort() &&
+                  link.getTargetPort() === element.model) {
+                  foundBadLink = true;
+                  return false;
+                }
+              });
+              // links cannot emanate from inputs
+              if (newLink.getSourcePort().getName() === 'input') {
+                foundBadLink = true;
+              }
+              if (foundBadLink) {
+                // remove
+                diagramEngine.getDiagramModel().getLink(
+                  newLink).remove();
+              } else {
+                // Connect the link
+                model.model.getLink().setTargetPort(element.model);
 
-            // Link was connected to a port, update the output
-            actionOutput.type = 'link-connected';
-            delete actionOutput.model;
-            actionOutput.linkModel = model.model.getLink();
-            actionOutput.portModel = element.model;
+                // Link was connected to a port, update the output
+                actionOutput.type = 'link-connected';
+                delete actionOutput.model;
+                actionOutput.linkModel = model.model.getLink();
+                actionOutput.portModel = element.model;
+              }
+            }
           }
         }
       });
