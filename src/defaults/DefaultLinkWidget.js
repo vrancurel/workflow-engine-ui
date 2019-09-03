@@ -111,15 +111,6 @@ export class DefaultLinkWidget extends React.Component {
 
     paths.push(this.generateLink({
       id: 0,
-      onMouseDown: (event) => {
-        if (!event.shiftKey) {
-          var point = new PointModel(link, diagramEngine.getRelativeMousePoint(event));
-          point.setSelected(true);
-          this.forceUpdate();
-          link.addPoint(point, 1);
-          pointAdded(point, event);
-        }
-      },
       d: ` M${pointLeft.x} ${pointLeft.y} C${pointLeft.x + margin} ${pointLeft.y} ${pointRight.x - margin} ${pointRight.y} ${pointRight.x} ${pointRight.y}` // eslint-disable-line
     }));
 
