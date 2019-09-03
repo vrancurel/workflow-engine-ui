@@ -72,7 +72,7 @@ export class DiagramWidget extends React.Component {
 
   componentDidMount() {
     const { diagramEngine, onChange } = this.props;
-    diagramEngine.setCanvas(this.refs['canvas']);
+    diagramEngine.setCanvas(this.canvasRef);
     diagramEngine.setForceUpdate(this.forceUpdate.bind(this));
     diagramEngine.setOpenModal(this.openModal.bind(this));
     const { selectAll, deselectAll, copy, paste, deleteItems } = this.getActions();
@@ -318,7 +318,7 @@ export class DiagramWidget extends React.Component {
     const { diagramEngine } = this.props;
     const { action, actionType: currentActionType } = this.state;
     const diagramModel = diagramEngine.getDiagramModel();
-    const { left, top } = this.refs.canvas.getBoundingClientRect();
+    const { left, top } = this.canvasRef.getBoundingClientRect();
     const { multiselectDrag, canvasDrag, moveItems } = this.getActions();
 
     // Select items so draw a bounding box
@@ -596,8 +596,8 @@ export class DiagramWidget extends React.Component {
 
   renderSelector() {
     const { action } = this.state;
-    const offsetWidth = this.refs.canvas && this.refs.canvas.offsetWidth || window.innerWidth;
-    const offsetHeight = this.refs.canvas && this.refs.canvas.offsetHeight || window.innerHeight;
+    const offsetWidth = this.canvasRef && this.canvasRef.offsetWidth || window.innerWidth;
+    const offsetHeight = this.canvasRef && this.canvasRef.offsetHeight || window.innerHeight;
 
     if (!(action instanceof SelectingAction)) {
       return null;
@@ -633,7 +633,7 @@ export class DiagramWidget extends React.Component {
 
     return (
       <div
-        ref='canvas'
+        ref={r => this.canvasRef = r}
         className='react-js-diagrams-canvas'
         onWheel={this.onWheel.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}
