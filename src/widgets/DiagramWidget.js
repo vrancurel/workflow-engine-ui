@@ -14,7 +14,7 @@ const DEFAULT_ACTIONS = {
   multiselect: true,
   multiselectDrag: true,
   canvasDrag: true,
-  zoom: true,
+  zoom: false,
   copy: true,
   paste: true,
   selectAll: true,
