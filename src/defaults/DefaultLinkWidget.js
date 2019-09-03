@@ -65,8 +65,16 @@ export class DefaultLinkWidget extends React.Component {
         stroke={color}
         strokeOpacity={selected ? 0.1 : 0}
         strokeWidth={20}
-        onMouseLeave={() => this.setState({ selected: false })}
-        onMouseEnter={() => this.setState({ selected: true })}
+        onMouseLeave={event => {
+          event.preventDefault();
+          this.props.link.setSelected(false);
+          this.setState({ selected: false });
+        }}
+        onMouseEnter={event => {
+          event.preventDefault();
+          this.props.link.setSelected(true);
+          this.setState({ selected: true });
+        }}
         onContextMenu={event => {
           event.preventDefault();
           this.props.link.remove();
