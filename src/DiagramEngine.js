@@ -17,6 +17,7 @@ export class DiagramEngine extends BaseEntity {
     this.canvas = null;
     this.paintableWidgets = null;
     this.forceUpdate = () => {};
+    this.openModal = () => {};
   }
 
   clearRepaintEntities() {
@@ -62,6 +63,10 @@ export class DiagramEngine extends BaseEntity {
 
   setForceUpdate(forceUpdate) {
     this.forceUpdate = forceUpdate;
+  }
+
+  setOpenModal(openModal) {
+    this.openModal = openModal;
   }
 
   getDiagramModel() {

@@ -43,6 +43,7 @@ export class DiagramWidget extends React.Component {
       windowListener: null,
       clipboard: null
     };
+    this.openModal = props.openModal;
   }
 
   componentWillUnmount() {
@@ -73,6 +74,7 @@ export class DiagramWidget extends React.Component {
     const { diagramEngine, onChange } = this.props;
     diagramEngine.setCanvas(this.refs['canvas']);
     diagramEngine.setForceUpdate(this.forceUpdate.bind(this));
+    diagramEngine.setOpenModal(this.openModal.bind(this));
     const { selectAll, deselectAll, copy, paste, deleteItems } = this.getActions();
 
     // Add a keyboard listener
