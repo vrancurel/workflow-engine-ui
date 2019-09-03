@@ -152,6 +152,13 @@ export class DiagramModel extends BaseEntity {
     return this.nodes[node];
   }
 
+  modifyNode(nodeID, cb, arg) {
+    if (!this.nodes[nodeID]) {
+      throw `Cannot find node: ${nodeID}`;
+    }
+    cb(this.nodes[nodeID], arg);
+  }
+  
   getLink(link) {
     if (link instanceof LinkModel) {
       return link;
