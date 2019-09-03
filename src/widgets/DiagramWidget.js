@@ -109,7 +109,7 @@ export class DiagramWidget extends React.Component {
         }
 
         // Delete all selected
-        if ([8, 46].indexOf(event.keyCode) !== -1 && selectedItems.length && deleteItems) {
+        if ([8, 46].indexOf(event.keyCode) !== -1 && ctrl && selectedItems.length && deleteItems) {
           selectedItems.forEach(element => {
             element.remove();
           });
