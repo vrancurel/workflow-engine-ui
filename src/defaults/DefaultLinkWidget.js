@@ -7,7 +7,7 @@ export class DefaultLinkWidget extends React.Component {
     width: 3,
     link:null,
     engine: null,
-    smooth: false,
+    smooth: true,
     diagramEngine: null
   };
 
