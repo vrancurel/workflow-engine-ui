@@ -9,4 +9,10 @@ export class DiamondNodeModel extends SRD.NodeModel {
     this.addPort(new DiamondPortModel('bottom'));
     this.addPort(new DiamondPortModel('right'));
   }
+
+  serialize() {
+    return _.merge(super.serialize(), {
+      _class: 'DiamondNodeModel',
+    });
+  }
 }

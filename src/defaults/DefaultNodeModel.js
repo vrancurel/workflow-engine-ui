@@ -27,6 +27,7 @@ export class DefaultNodeModel extends NodeModel {
 
   serialize() {
     return _.merge(super.serialize(), {
+      _class: 'DefaultNodeModel',
       name: this.name,
       color: this.color,
     });

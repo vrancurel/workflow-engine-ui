@@ -9,6 +9,7 @@ export class DiamondPortModel extends SRD.PortModel {
 
   serialize() {
     return _.merge(super.serialize(), {
+      _class: 'DiamondPortModel',
       position: this.position,
     });
   }

@@ -18,6 +18,7 @@ export class ConnectionNodeModel extends RJD.NodeModel {
 
   serialize() {
     return _.merge(super.serialize(), {
+      _class: 'ConnectionNodeModel',
       name: this.name,
       color: this.color,
     });

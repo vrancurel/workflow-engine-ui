@@ -27,6 +27,7 @@ export class DefaultPortModel extends PortModel {
   serialize() {
     return {
       ...super.serialize(),
+      _class: 'DefaultPortModel',
       in: this.in,
       label: this.label
     };

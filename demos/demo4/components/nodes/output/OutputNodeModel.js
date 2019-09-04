@@ -17,6 +17,7 @@ export class OutputNodeModel extends RJD.NodeModel {
 
   serialize() {
     return _.merge(super.serialize(), {
+      _class: 'OutputNodeModel',
       name: this.name,
       color: this.color,
     });

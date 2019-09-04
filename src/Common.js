@@ -15,7 +15,6 @@ export class BaseModel extends BaseEntity {
   serialize() {
     return {
       ...super.serialize(),
-      _class: this.constructor.name,
       selected: this.selected
     };
   }
@@ -63,6 +62,7 @@ export class PointModel extends BaseModel {
   serialize() {
     return {
       ...super.serialize(),
+      _class: 'PointModel',
       x: this.x,
       y: this.y
     };
@@ -118,6 +118,7 @@ export class LinkModel extends BaseModel {
   serialize() {
     return {
       ...super.serialize(),
+      _class: 'LinkModel',
       type: this.linkType,
       source: this.sourcePort ? this.sourcePort.getParent().id : null,
       sourcePort: this.sourcePort ? this.sourcePort.id : null,
@@ -225,6 +226,7 @@ export class PortModel extends BaseModel {
   serialize() {
     return {
       ...super.serialize(),
+      _class: 'PortModel',
       name: this.name,
       parentNode: this.parentNode.id,
       links: _.map(this.links, link => link.id)
@@ -277,6 +279,7 @@ export class NodeModel extends BaseModel {
   serialize() {
     return {
       ...super.serialize(),
+      _class: 'NodeModel',
       type: this.nodeType,
       x: this.x,
       y: this.y,
