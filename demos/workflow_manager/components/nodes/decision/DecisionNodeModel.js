@@ -31,6 +31,7 @@ export class DecisionNodeModel extends RJD.NodeModel {
 
   serialize() {
     return _.merge(super.serialize(), {
+      _class: 'DecisionNodeModel',
       name: this.name,
       color: this.color,
       subType: this.subType,

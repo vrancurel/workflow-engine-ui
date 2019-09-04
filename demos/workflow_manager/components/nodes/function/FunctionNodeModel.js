@@ -36,6 +36,7 @@ export class FunctionNodeModel extends RJD.NodeModel {
 
   serialize() {
     return _.merge(super.serialize(), {
+      _class: 'FunctionNodeModel',
       name: this.name,
       color: this.color,
       subType: this.subType,

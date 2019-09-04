@@ -19,6 +19,7 @@ export class StopperNodeModel extends RJD.NodeModel {
 
   serialize() {
     return _.merge(super.serialize(), {
+      _class: 'StopperNodeModel',
       name: this.name,
       color: this.color,
     });

@@ -19,6 +19,7 @@ export class UpdateNodeModel extends RJD.NodeModel {
 
   serialize() {
     return _.merge(super.serialize(), {
+      _class: 'UpdateNodeModel',
       name: this.name,
       color: this.color,
     });

@@ -29,6 +29,7 @@ export class SearchNodeModel extends RJD.NodeModel {
 
   serialize() {
     return _.merge(super.serialize(), {
+      _class: 'SearchNodeModel',
       name: this.name,
       color: this.color,
       subType: this.subType,

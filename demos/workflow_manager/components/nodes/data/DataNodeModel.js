@@ -27,6 +27,7 @@ export class DataNodeModel extends RJD.NodeModel {
 
   serialize() {
     return _.merge(super.serialize(), {
+      _class: 'DataNodeModel',
       name: this.name,
       color: this.color,
       subType: this.subType,
