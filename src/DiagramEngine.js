@@ -143,7 +143,7 @@ export class DiagramEngine extends BaseEntity {
     const point = this.getRelativePoint(event.pageX, event.pageY);
     return {
       x: (point.x / (this.diagramModel.getZoomLevel() / 100.0)) - this.diagramModel.getOffsetX(),
-      y: (point.y / (this.diagramModel.getZoomLevel() / 100.0)) - this.diagramModel.getOffsetY()
+      y: (event.pageY / (this.diagramModel.getZoomLevel() / 100.0)) - this.diagramModel.getOffsetY()
     };
   }
 
